@@ -40,7 +40,7 @@ public:
 	~LinkedList();
 };
 
-void sentimentAnalysis(LinkedList& reviews, LinkedList& good, LinkedList& bad, const string& review);
+void sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review);
 //reading CSV function
 void readCSV(LinkedList& llist, const string& file);
 void readWords(LinkedList& llist, const string& file);

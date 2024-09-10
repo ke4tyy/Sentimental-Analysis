@@ -22,6 +22,6 @@ int main() {
 	//cout << "Rating: " << reviewsList.selectRating(0);
 
 
-	sentimentAnalysis(reviewsList, positiveWordList, negativeWordList, reviewsList.selectReview(90));
+	sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(0));
 	return 0;
 }

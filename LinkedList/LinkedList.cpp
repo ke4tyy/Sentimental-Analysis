@@ -187,7 +187,7 @@ void readWords(LinkedList& linkedList, const string& filepath) {
 }
 
 
-void sentimentAnalysis(LinkedList& reviews, LinkedList& good, LinkedList& bad, const string& review) {
+void sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review) {
 	cout << review << endl;
 	cout << fixed << setprecision(2);
 	int goodCount = 0;
@@ -196,14 +196,17 @@ void sentimentAnalysis(LinkedList& reviews, LinkedList& good, LinkedList& bad, c
 	istringstream iss(review);
 
 	string word;
-
+	string goodWords = "";
+	string badWords = "";
 	while (iss >> word) {
 		word = trim(word);
 		if (good.contains(word)) {
 			goodCount++;
+			goodWords += " - " + word + "\n";
 		}
 		else if (bad.contains(word)) {
 			badCount++;
+			badWords += " - " + word + "\n";
 		}
 	}
 
@@ -233,8 +236,9 @@ void sentimentAnalysis(LinkedList& reviews, LinkedList& good, LinkedList& bad, c
 		rev = "Very Good";
 		break;
 	}
-	cout << max << endl << min << endl << raw << endl << sentiment << endl;
 	cout << "Positive Words = " << goodCount << endl;
+	cout << goodWords;
 	cout << "Negative Words = " << badCount << endl;
+	cout << badWords;
 	cout << "Sentiment score (1-5) is " << sentiment << ", thus the rating should be equal to " << comp << "(" << rev <<")";
 }
