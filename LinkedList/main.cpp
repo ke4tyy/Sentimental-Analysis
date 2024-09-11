@@ -5,16 +5,18 @@ using namespace std;
 
 int main() {
 	//declare reviews, positive words, and negative words
-	LinkedList reviewsList, positiveWordList, negativeWordList;
+	LinkedList reviewsList, positiveWordList, negativeWordList, wordList;
 
-	readCSV(reviewsList, "tripadvisor_hotel_reviews.CSV");
-	readWords(positiveWordList, "positive-words.txt");
-	readWords(negativeWordList, "negative-words.txt");
+	reviewsList.readCSV(reviewsList, "tripadvisor_hotel_reviews.CSV");
+	positiveWordList.readWords(positiveWordList, "positive-words.txt");
+	negativeWordList.readWords(negativeWordList, "negative-words.txt");
 
-	reviewsList.print(5, false);
+	wordList.storeFreq(positiveWordList, negativeWordList, reviewsList, wordList);
+	wordList.sortWords();
+	wordList.print(wordList.countTotal(), 2);
+	//reviewsList.print(5, false);
 
-	positiveWordList.print(20, true);
-
+	//positiveWordList.print(20, true);
 
 
 	//cout << "total reviews: " << reviewsList.countTotal() << endl;

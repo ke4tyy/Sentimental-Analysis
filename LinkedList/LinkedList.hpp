@@ -10,34 +10,34 @@ using namespace std;
 //Explanation: Struct, grouping variables as members of a structure
 struct Node {
 	string review, word;
-	int rating;
+	int rating, frequency;
 	Node* next; //pointer location
 
 	//declaring constructor
-	Node(string review, int rating = -1);
+	Node(string review, int rating);
  };
-
 
 //Linked List class, 
 class LinkedList {
 private:
 	Node* head;
 	Node* tail;
-
 	void addNode(Node* newNode);
 
 public:
 	LinkedList();
 	void addReview(string review, int rating);
 	void addWord(string word);
+	void addWordAndFreq(string word);
 
-	void print(int amount, bool wordOrNot);
-
+	void print(int amount, int choice);
 	int countTotal();
 	bool contains(const string& word);
 	string selectReview(int index);
 	int selectRating(int index);
 
+	void storeFreq(LinkedList& good, LinkedList& bad, LinkedList& reviews, LinkedList& words);
+	void sortWords();
 	void sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review);
 	//reading CSV function
 	void readCSV(LinkedList& llist, const string& file);

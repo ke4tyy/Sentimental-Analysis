@@ -8,14 +8,19 @@
 #include "LinkedList.hpp"
 
 //default constructor 
-Node::Node(string content, int rat) {
+Node::Node(string content, int rat = -1) {
 	review = "";
 	word = "";
 	rating = rat;
+
 	next = nullptr; //first register as end before setting the next
 
 	if (rat == -1) {
 		word = content;
+	}
+	else if (rat == 0) {
+		word = content;
+		frequency = 1;
 	}
 	else {
 		review = content;
@@ -42,6 +47,7 @@ void LinkedList::addNode(Node* newNode) {
 	}
 }
 
+
 //add Review function
 void LinkedList::addReview(string rev, int rat) {
 	Node* newNode = new Node(rev, rat);
@@ -50,19 +56,36 @@ void LinkedList::addReview(string rev, int rat) {
 
 //add Word function
 void LinkedList::addWord(string w) {
-	Node* newNode = new Node(w);
+	Node* newNode = new Node(w, -1);
 	addNode(newNode);
 }
+
+void LinkedList::addWordAndFreq(string w) {
+	Node* temp = head;
+	while (temp != nullptr) {
+		if (temp->word == w) {
+			temp->frequency++;
+			return;
+		}
+		temp = temp->next;
+	}
+	Node* newNode = new Node(w, 0);
+	addNode(newNode);
+}
+
 //printing reviews or word based on the boolean value
 
-void LinkedList::print(int amount, bool wordOrNot) {
+void LinkedList::print(int amount, int choice) {
 	Node* temp = head;
 	int count = 0;
 	while (temp != nullptr && count < amount) {
-		if (wordOrNot) {
+		if (choice == 1) {
 			cout << temp->word << endl;
 		}
-		else {
+		else if (choice == 2) {
+			cout << temp->word << ", Frequency: " << temp->frequency << endl;
+		}
+		else if (choice == 3) {
 			cout << string(100, '-') << endl;
 			cout << "Review: \n" << temp->review << "\n \n" << "Rating: " << temp->rating << endl;
 			cout << string(100, '-') << endl;
@@ -182,6 +205,59 @@ void LinkedList::readWords(LinkedList& linkedList, const string& filepath) {
 	}
 }
 
+void LinkedList::storeFreq(LinkedList& good, LinkedList& bad, LinkedList& reviews, LinkedList& words) {
+	
+	Node* temp = reviews.head;
+	int limit = reviews.countTotal();
+	int count = 0;
+
+	while (temp != nullptr && count < limit) {
+		cout << temp->review << endl << endl;
+
+		istringstream iss(temp->review);
+		string word;
+
+		while (iss >> word) {
+			word = trim(word);
+			if (good.contains(word)) {
+				cout << "Good: " << word << endl;
+				words.addWordAndFreq(word);
+
+			}
+			else if (bad.contains(word)) {
+				cout << "Bad: " << word << endl;
+				words.addWordAndFreq(word);
+			}
+		}
+		temp = temp->next;
+		count++;
+	}
+
+}
+
+void LinkedList::sortWords() {
+	if (head == nullptr) return;
+
+	bool swapped;
+	Node* current;
+	Node* last = nullptr;
+
+	do {
+		swapped = false;
+		current = head;
+
+		while (current->next != last) {
+			if (current->frequency > current->next->frequency) {
+				// Swap the words and frequencies
+				swap(current->word, current->next->word);
+				swap(current->frequency, current->next->frequency);
+				swapped = true;
+			}
+			current = current->next;
+		}
+		last = current;
+	} while (swapped);
+}
 
 void LinkedList::sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review) {
 	cout << review << endl;
