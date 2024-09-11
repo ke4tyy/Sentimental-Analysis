@@ -11,7 +11,10 @@ int main() {
 	readWords(positiveWordList, "positive-words.txt");
 	readWords(negativeWordList, "negative-words.txt");
 
-	//positiveWordList.printWords(10);
+	reviewsList.print(5, false);
+
+	positiveWordList.print(20, true);
+
 
 
 	//cout << "total reviews: " << reviewsList.countTotal() << endl;
@@ -22,6 +25,6 @@ int main() {
 	//cout << "Rating: " << reviewsList.selectRating(0);
 
 
-	sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(0));
+	//sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(0));
 	return 0;
 }

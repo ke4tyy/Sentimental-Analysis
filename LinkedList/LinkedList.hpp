@@ -14,8 +14,7 @@ struct Node {
 	Node* next; //pointer location
 
 	//declaring constructor
-	Node(string review, int rating);
-	Node(string word);
+	Node(string review, int rating = -1);
  };
 
 
@@ -23,26 +22,29 @@ struct Node {
 class LinkedList {
 private:
 	Node* head;
+	Node* tail;
+
+	void addNode(Node* newNode);
 
 public:
 	LinkedList();
-	void addNode(string review, int rating);
-	void printList(int amount);
+	void addReview(string review, int rating);
+	void addWord(string word);
 
-	void addNode(string word);
-	void printWords(int amount);
+	void print(int amount, bool wordOrNot);
 
 	int countTotal();
 	bool contains(const string& word);
 	string selectReview(int index);
 	int selectRating(int index);
 
+	void sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review);
+	//reading CSV function
+	void readCSV(LinkedList& llist, const string& file);
+	void readWords(LinkedList& llist, const string& file);
 	~LinkedList();
 };
 
-void sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review);
-//reading CSV function
-void readCSV(LinkedList& llist, const string& file);
-void readWords(LinkedList& llist, const string& file);
+
 
 #endif

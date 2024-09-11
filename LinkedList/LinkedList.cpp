@@ -8,74 +8,70 @@
 #include "LinkedList.hpp"
 
 //default constructor 
-Node::Node(string rev, int rat) {
-	review = rev;
+Node::Node(string content, int rat) {
+	review = "";
+	word = "";
 	rating = rat;
 	next = nullptr; //first register as end before setting the next
-}
 
-Node::Node(string w) {
-	word = w;
-	next = nullptr;
+	if (rat == -1) {
+		word = content;
+	}
+	else {
+		review = content;
+	}
 }
 
 //set head to null
 LinkedList::LinkedList() {
 	head = nullptr;
+	tail = nullptr;
 }
 
 //assigning pointer location to the node
 //concept explanation
-void LinkedList::addNode(string rev, int rat) {
-	Node* newNode = new Node(rev, rat); //create node
+
+//building block for addReview and addWord
+void LinkedList::addNode(Node* newNode) {
 	if (head == nullptr) { //to add the first node
-		head = newNode;
+		head = tail = newNode; //set head and tail at the same time
 	}
-	else { //else go to the end of the list to add new node
-		Node* temp = head; //set header as temp
-		while (temp -> next != nullptr) {
-			temp = temp -> next;//go to next pointer if next pointer is not null
-		}
-		temp -> next = newNode; //new node on the last
+	else { //else change the tail to new node
+		tail->next = newNode;
+		tail = newNode;
 	}
 }
 
-void LinkedList::addNode(string word) {
-	Node* newNode = new Node(word);
-	if (head == nullptr) {
-		head = newNode;
-	}
-	else {
-		Node* temp = head;
-		while (temp -> next != nullptr) {
-			temp = temp -> next;
-		}
-		temp -> next = newNode;
-	}
+//add Review function
+void LinkedList::addReview(string rev, int rat) {
+	Node* newNode = new Node(rev, rat);
+	addNode(newNode);
 }
 
-//printing the reviews and rating based on the amount
-void LinkedList::printList(int amount) {
+//add Word function
+void LinkedList::addWord(string w) {
+	Node* newNode = new Node(w);
+	addNode(newNode);
+}
+//printing reviews or word based on the boolean value
+
+void LinkedList::print(int amount, bool wordOrNot) {
 	Node* temp = head;
 	int count = 0;
 	while (temp != nullptr && count < amount) {
-		cout << string(100, '-') << endl;
-		cout << "Review: \n" << temp->review << endl << endl << "Rating: " << temp->rating << endl;
-		cout << string(100, '-') << endl;
-		temp = temp -> next;
+		if (wordOrNot) {
+			cout << temp->word << endl;
+		}
+		else {
+			cout << string(100, '-') << endl;
+			cout << "Review: \n" << temp->review << "\n \n" << "Rating: " << temp->rating << endl;
+			cout << string(100, '-') << endl;
+		}
+		temp = temp->next;
 		count++;
 	}
 }
 
-void LinkedList::printWords(int amount) {
-	Node* temp = head;
-	int count = 0;
-	while (temp != nullptr && count < amount) {
-		cout << temp -> word << endl;
-		temp = temp -> next;
-		count++;
-	}
-}
 
 int LinkedList::countTotal() {
 	Node* temp = head;
@@ -143,7 +139,7 @@ string trim(const string& str) {
 }
 
 //reading CSV file
-void readCSV(LinkedList& linkedList, const string& filepath) {
+void LinkedList::readCSV(LinkedList& linkedList, const string& filepath) {
 	ifstream file(filepath); //check if filepath is correct
 	
 	string line;
@@ -160,7 +156,7 @@ void readCSV(LinkedList& linkedList, const string& filepath) {
 
 			int rating = stoi(ratingStr); //convert rating to integer
 
-			linkedList.addNode(review, rating); // add it into the linked list
+			linkedList.addReview(review, rating); // add it into the linked list
 		}
 		file.close();
 	}
@@ -169,7 +165,7 @@ void readCSV(LinkedList& linkedList, const string& filepath) {
 	}
 }
 
-void readWords(LinkedList& linkedList, const string& filepath) {
+void LinkedList::readWords(LinkedList& linkedList, const string& filepath) {
 	ifstream file(filepath);
 
 	string line;
@@ -177,7 +173,7 @@ void readWords(LinkedList& linkedList, const string& filepath) {
 	if (file.is_open()) {
 		while (getline(file, line)) {
 			string word = line;
-			linkedList.addNode(word);
+			linkedList.addWord(word);
 		}
 		file.close();
 	}
@@ -187,7 +183,7 @@ void readWords(LinkedList& linkedList, const string& filepath) {
 }
 
 
-void sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review) {
+void LinkedList::sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review) {
 	cout << review << endl;
 	cout << fixed << setprecision(2);
 	int goodCount = 0;
