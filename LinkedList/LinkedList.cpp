@@ -235,8 +235,7 @@ void LinkedList::storeFreq(LinkedList& good, LinkedList& bad, LinkedList& review
 
 }
 
-void LinkedList::sortWords() {
-	if (head == nullptr) return;
+void LinkedList::bubbleSortWordsAscending() {
 
 	bool swapped;
 	Node* current;
@@ -257,6 +256,48 @@ void LinkedList::sortWords() {
 		}
 		last = current;
 	} while (swapped);
+}
+
+
+void LinkedList::selectionSortWordsAscending() {
+	Node* first = head;
+
+	while (first != nullptr) {
+		Node* startNode = first;
+		Node* currentNode = first->next;
+
+		while (currentNode != nullptr) {
+			if (currentNode->frequency < startNode->frequency) {
+				startNode = currentNode;
+			}
+			currentNode = currentNode->next;
+		}
+
+		if (startNode != first) {
+			swap(first->word, startNode->word);
+			swap(first->frequency, startNode->frequency);
+		}
+
+		first = first->next;
+	}
+}
+
+
+
+
+
+Node* LinkedList::recursionList(Node* currentNode, Node* previousNode) {
+	if (!currentNode) {
+		return previousNode;
+	}
+
+	Node* nextNode = currentNode->next;
+	currentNode->next = previousNode;
+	return recursionList(nextNode, currentNode);
+}
+
+void LinkedList::reverseList() {
+	head = recursionList(head);
 }
 
 void LinkedList::sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review) {

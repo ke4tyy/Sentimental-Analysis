@@ -37,7 +37,11 @@ public:
 	int selectRating(int index);
 
 	void storeFreq(LinkedList& good, LinkedList& bad, LinkedList& reviews, LinkedList& words);
-	void sortWords();
+	void bubbleSortWordsAscending();
+	void selectionSortWordsAscending();
+
+	Node* recursionList(Node* currentNode, Node* previousNode = nullptr);
+	void reverseList();
 	void sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review);
 	//reading CSV function
 	void readCSV(LinkedList& llist, const string& file);
