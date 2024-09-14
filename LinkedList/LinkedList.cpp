@@ -156,10 +156,23 @@ LinkedList::~LinkedList() {
 
 
 string trim(const string& str) {
-	size_t first = str.find_first_not_of(' '); //find first word with no space
-	size_t last = str.find_last_not_of(' '); //find last word with no space
-	return str.substr(first, (last - first + 1)); //create substring
+	size_t start = 0;
+	size_t end = str.length() - 1;
+
+	// Trim from the left (start) - Skip spaces and special characters
+	while (start <= end && (isspace(static_cast<unsigned char>(str[start])) || !isalnum(static_cast<unsigned char>(str[start])))) {
+		start++;
+	}
+
+	// Trim from the right (end) - Skip spaces and special characters
+	while (end >= start && (isspace(static_cast<unsigned char>(str[end])) || !isalnum(static_cast<unsigned char>(str[end])))) {
+		end--;
+	}
+
+	// Return the substring that is between the trimmed start and end
+	return (start <= end) ? str.substr(start, end - start + 1) : "";
 }
+
 
 //reading CSV file
 void LinkedList::readCSV(LinkedList& linkedList, const string& filepath) {
@@ -205,13 +218,17 @@ void LinkedList::readWords(LinkedList& linkedList, const string& filepath) {
 	}
 }
 
+
 void LinkedList::storeFreq(LinkedList& good, LinkedList& bad, LinkedList& reviews, LinkedList& words) {
 	
 	Node* temp = reviews.head;
 	int limit = reviews.countTotal();
 	int count = 0;
 
+
+
 	while (temp != nullptr && count < limit) {
+		cout << "Current position: " << count + 1 << endl << endl;
 		cout << temp->review << endl << endl;
 
 		istringstream iss(temp->review);

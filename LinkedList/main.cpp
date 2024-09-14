@@ -7,13 +7,14 @@ int main() {
 	//declare reviews, positive words, and negative words
 	LinkedList reviewsList, positiveWordList, negativeWordList, wordList;
 
-	reviewsList.readCSV(reviewsList, "testing.CSV");
+	reviewsList.readCSV(reviewsList, "tripadvisor_hotel_reviews.CSV");
+	//reviewsList.readCSV(reviewsList, "testing.CSV");
 	positiveWordList.readWords(positiveWordList, "positive-words.txt");
 	negativeWordList.readWords(negativeWordList, "negative-words.txt");
 
 	wordList.storeFreq(positiveWordList, negativeWordList, reviewsList, wordList);
 	wordList.selectionSortWordsAscending();
-	//wordList.reverseList();
+	////wordList.reverseList();
 	wordList.print(wordList.countTotal(), 2);
 	//reviewsList.print(5, false);
 

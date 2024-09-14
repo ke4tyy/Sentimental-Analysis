@@ -36,6 +36,7 @@ public:
 	string selectReview(int index);
 	int selectRating(int index);
 
+
 	void storeFreq(LinkedList& good, LinkedList& bad, LinkedList& reviews, LinkedList& words);
 	void bubbleSortWordsAscending();
 	void selectionSortWordsAscending();
