@@ -38,8 +38,11 @@ public:
 
 
 	void storeFreq(LinkedList& good, LinkedList& bad, LinkedList& reviews, LinkedList& words);
-	void bubbleSortWordsAscending();
+
+
 	void selectionSortWordsAscending();
+	void radixSortWordsAscending();
+	void quickSortWordsAscending();
 
 	Node* recursionList(Node* currentNode, Node* previousNode = nullptr);
 	void reverseList();

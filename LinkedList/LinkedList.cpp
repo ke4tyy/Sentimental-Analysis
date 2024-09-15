@@ -153,7 +153,7 @@ LinkedList::~LinkedList() {
 }
 
 //used for CSV trimming, because many commas in the review, stacking with the rating
-
+//need change cuz chatgpt generated
 
 string trim(const string& str) {
 	size_t start = 0;
@@ -168,9 +168,16 @@ string trim(const string& str) {
 	while (end >= start && (isspace(static_cast<unsigned char>(str[end])) || !isalnum(static_cast<unsigned char>(str[end])))) {
 		end--;
 	}
+	// Convert the trimmed portion to lowercase
+	string trimmedStr = (start <= end) ? str.substr(start, end - start + 1) : "";
 
-	// Return the substring that is between the trimmed start and end
-	return (start <= end) ? str.substr(start, end - start + 1) : "";
+	// Convert each character to lowercase
+	for (char& ch : trimmedStr) {
+		ch = tolower(static_cast<unsigned char>(ch));
+	}
+
+	return trimmedStr;
+
 }
 
 
@@ -252,28 +259,6 @@ void LinkedList::storeFreq(LinkedList& good, LinkedList& bad, LinkedList& review
 
 }
 
-void LinkedList::bubbleSortWordsAscending() {
-
-	bool swapped;
-	Node* current;
-	Node* last = nullptr;
-
-	do {
-		swapped = false;
-		current = head;
-
-		while (current->next != last) {
-			if (current->frequency > current->next->frequency) {
-				// Swap the words and frequencies
-				swap(current->word, current->next->word);
-				swap(current->frequency, current->next->frequency);
-				swapped = true;
-			}
-			current = current->next;
-		}
-		last = current;
-	} while (swapped);
-}
 
 
 void LinkedList::selectionSortWordsAscending() {
@@ -299,6 +284,125 @@ void LinkedList::selectionSortWordsAscending() {
 	}
 }
 
+
+
+void LinkedList::radixSortWordsAscending() {
+	if (head == nullptr || head->next == nullptr) return; // No need to sort
+
+	// Find the maximum frequency in the linked list
+	Node* current = head;
+	int maxFrequency = current->frequency;
+	while (current != nullptr) {
+		if (current->frequency > maxFrequency)
+			maxFrequency = current->frequency;
+		current = current->next;
+	}
+
+	// Start at the least significant digit place (units, tens, hundreds, etc.)
+	int place = 1; // place = 10^0 for the units place
+
+	// Continue sorting for each digit place until the largest number is fully processed
+	while (maxFrequency / place > 0) {
+		// Create 10 buckets (for digits 0-9)
+		Node* outputList[10] = { nullptr };
+		Node* tails[10] = { nullptr };
+
+		// Reset current to head to traverse the linked list again
+		current = head;
+
+		// Place each node in the corresponding bucket based on the current digit
+		while (current != nullptr) {
+			int digit = (current->frequency / place) % 10;
+
+			// Add node to the bucket
+			if (outputList[digit] == nullptr) {
+				outputList[digit] = current;
+				tails[digit] = current;
+			}
+			else {
+				tails[digit]->next = current;
+				tails[digit] = current;
+			}
+
+			current = current->next;
+		}
+
+		// Reassemble the list by combining the buckets
+		Node* newHead = nullptr;
+		Node* newTail = nullptr;
+
+		for (int i = 0; i < 10; i++) {
+			if (outputList[i] != nullptr) {
+				if (newHead == nullptr) {
+					newHead = outputList[i];
+					newTail = tails[i];
+				}
+				else {
+					newTail->next = outputList[i];
+					newTail = tails[i];
+				}
+			}
+		}
+
+		// Set the last node's next pointer to nullptr to avoid cycles
+		newTail->next = nullptr;
+
+		// Update the head pointer to the newly sorted list
+		head = newHead;
+
+		// Move to the next digit place (tens, hundreds, etc.)
+		place *= 10;
+	}
+}
+
+void LinkedList::quickSortWordsAscending() {
+	if (head == nullptr || head->next == nullptr) return; // No need to sort
+
+	// Find the tail of the linked list
+	Node* tail = head;
+	while (tail != nullptr && tail->next != nullptr) {
+		tail = tail->next;
+	}
+
+	// Quick Sort logic
+	Node* start = head;
+	Node* end = tail;
+
+	// Stack-based quicksort approach without separate partition function
+	while (start != end && start->next != end) {
+		Node* pivot = start;
+		Node* current = start->next;
+		Node* prev = start;
+
+		// Partitioning the list using the pivot
+		while (current != end->next) {
+			if (current->frequency < pivot->frequency) {
+				prev = prev->next;
+				swap(prev->word, current->word);
+				swap(prev->frequency, current->frequency);
+			}
+			current = current->next;
+		}
+
+		// Swapping the pivot element with the partition point
+		swap(pivot->word, prev->word);
+		swap(pivot->frequency, prev->frequency);
+
+		// Now the list is partitioned; quicksort left and right sub-lists
+		Node* leftTail = prev;
+		Node* rightStart = prev->next;
+
+		// Recursive-like loop for the left side
+		if (start != leftTail) {
+			tail = leftTail;
+			end = leftTail;
+		}
+		else {
+			start = rightStart;
+			end = tail;
+		}
+	}
+}
 
 
 
