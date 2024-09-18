@@ -233,7 +233,6 @@ void LinkedList::storeFreq(LinkedList& good, LinkedList& bad, LinkedList& review
 	int count = 0;
 
 
-
 	while (temp != nullptr && count < limit) {
 		cout << "Current position: " << count + 1 << endl << endl;
 		cout << temp->review << endl << endl;
