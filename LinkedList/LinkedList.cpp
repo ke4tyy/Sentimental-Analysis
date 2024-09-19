@@ -4,10 +4,9 @@
 #include <fstream>
 #include <sstream>
 #include <cmath>
-
+#include <algorithm>
 #include "LinkedList.hpp"
 
-//default constructor 
 Node::Node(string content, int rat = -1) {
 	review = "";
 	word = "";
@@ -26,136 +25,96 @@ Node::Node(string content, int rat = -1) {
 		review = content;
 	}
 }
+//default constructor 
+ReviewNode::ReviewNode(string review, int rating) {
+	this->review = review;
+	this->rating = rating;
 
-//set head to null
-LinkedList::LinkedList() {
+	next = nullptr;
+}
+
+WordNode::WordNode(string word) {
+	this->word = word;
+	next = nullptr;
+}
+
+
+//review list
+ReviewList::ReviewList() {
 	head = nullptr;
 	tail = nullptr;
 }
 
-//assigning pointer location to the node
-//concept explanation
-
-//building block for addReview and addWord
-void LinkedList::addNode(Node* newNode) {
-	if (head == nullptr) { //to add the first node
-		head = tail = newNode; //set head and tail at the same time
+void ReviewList::addReview(string review, int rating) {
+	ReviewNode* newNode = new ReviewNode(review, rating);
+	if (head == nullptr) {
+		head = tail = newNode;
 	}
-	else { //else change the tail to new node
+	else {
 		tail->next = newNode;
 		tail = newNode;
 	}
 }
 
-
-//add Review function
-void LinkedList::addReview(string rev, int rat) {
-	Node* newNode = new Node(rev, rat);
-	addNode(newNode);
-}
-
-//add Word function
-void LinkedList::addWord(string w) {
-	Node* newNode = new Node(w, -1);
-	addNode(newNode);
-}
-
-void LinkedList::addWordAndFreq(string w) {
-	Node* temp = head;
-	while (temp != nullptr) {
-		if (temp->word == w) {
-			temp->frequency++;
-			return;
-		}
-		temp = temp->next;
-	}
-	Node* newNode = new Node(w, 0);
-	addNode(newNode);
-}
-
-//printing reviews or word based on the boolean value
-
-void LinkedList::print(int amount, int choice) {
-	Node* temp = head;
+int ReviewList::countTotal() {
+	ReviewNode* current = head;
 	int count = 0;
-	while (temp != nullptr && count < amount) {
-		if (choice == 1) {
-			cout << temp->word << endl;
-		}
-		else if (choice == 2) {
-			cout << temp->word << ", Frequency: " << temp->frequency << endl;
-		}
-		else if (choice == 3) {
-			cout << string(100, '-') << endl;
-			cout << "Review: \n" << temp->review << "\n \n" << "Rating: " << temp->rating << endl;
-			cout << string(100, '-') << endl;
-		}
-		temp = temp->next;
+	while (current != nullptr) {
+		current = current->next;
 		count++;
-	}
-}
-
-
-int LinkedList::countTotal() {
-	Node* temp = head;
-	int count = 0;
-
-	while (temp != nullptr) {
-		count++;
-		temp = temp -> next;
 	}
 	return count;
 }
 
-string LinkedList::selectReview(int index) {
-	Node* temp = head;
-	int current = 0;
-	if (temp != nullptr) {
-		while (current < index) {
-			temp = temp->next;
-			current++;
+string ReviewList::selectReview(int index) {
+	ReviewNode* returnNode = head;
+	int count = 0;
+	if (returnNode != nullptr) {
+		while (count < index) {
+			returnNode = returnNode->next;
+			count++;
 		}
-		return temp->review;
+		return returnNode->review;
 	}
+	cerr << "Error: This index is out of the range!" << endl;
+	return "null";
 }
 
-int LinkedList::selectRating(int index) {
-	Node* temp = head;
-	int current = 0;
-	if (temp != nullptr) {
-		while (current < index) {
-			temp = temp->next;
-			current++;
+void ReviewList::readCSV(string path) {
+	ifstream file(path);
+	string line;
+
+	if (file.is_open()) {
+		getline(file, line);
+
+		while (getline(file, line)) {
+			size_t lastComma = line.find_last_of(','); //get the last comma that separates review and rating
+			string review = line.substr(0, lastComma); //gets review
+			string rat = line.substr(lastComma + 1); //gets rating
+
+			int rating = stoi(rat);
+			this->addReview(review, rating);
 		}
-		return temp->rating;
+		file.close();
+	}
+	else {
+		cerr << "Error reading file" << endl;
 	}
 }
 
-bool LinkedList::contains(const string& word) {
-	Node* temp = head;
-	while (temp != nullptr) {
-		if (temp->word == word) {
-			return true;
+void ReviewList::print(int amount) {
+	ReviewNode* current = head;
+	int count = 0;
+	while (current != nullptr && count < amount) {
+			cout << string(100, '-') << endl;
+			cout << "Review: \n" << current->review << "\n \n" << "Rating: " << current->rating << endl;
+			cout << string(100, '-') << endl;
+			current = current->next;
+			count++;
 		}
-		temp = temp->next;
-	}
-	return false;
 }
 
-//destructor of the whole linked list
-LinkedList::~LinkedList() {
-	Node* temp;
-	while (head != nullptr) {
-		temp = head;
-		head = head -> next;
-		delete temp;
-	}
-}
-
-//used for CSV trimming, because many commas in the review, stacking with the rating
-//need change cuz chatgpt generated
-
-string trim(const string& str) {
+string ReviewList::trim(string str) {
 	size_t start = 0;
 	size_t end = str.length() - 1;
 
@@ -180,83 +139,239 @@ string trim(const string& str) {
 
 }
 
+void ReviewList::updateFrequency(WordList& good, WordList& bad) {
+	ReviewNode* temp = head;
+	int count = 1;
 
-//reading CSV file
-void LinkedList::readCSV(LinkedList& linkedList, const string& filepath) {
-	ifstream file(filepath); //check if filepath is correct
-	
-	string line;
-
-	if (file.is_open()) {
-		getline(file, line); //skips header
-
-		while (getline(file, line)) {
-			size_t lastComma = line.find_last_of(','); //find the last comma, because in the csv file the last comma separates the rating
-
-			string review = line.substr(0, lastComma); //takes everything before the last comma
-
-			string ratingStr = line.substr(lastComma + 1); //take the rating, because rating length is always 1, so just + 1 to get the rating
-
-			int rating = stoi(ratingStr); //convert rating to integer
-
-			linkedList.addReview(review, rating); // add it into the linked list
-		}
-		file.close();
-	}
-	else {
-		cerr << "Error opening file" << endl;
-	}
-}
-
-void LinkedList::readWords(LinkedList& linkedList, const string& filepath) {
-	ifstream file(filepath);
-
-	string line;
-
-	if (file.is_open()) {
-		while (getline(file, line)) {
-			string word = line;
-			linkedList.addWord(word);
-		}
-		file.close();
-	}
-	else {
-		cerr << "Error opening file" << endl;
-	}
-}
-
-
-void LinkedList::storeFreq(LinkedList& good, LinkedList& bad, LinkedList& reviews, LinkedList& words) {
-	
-	Node* temp = reviews.head;
-	int limit = reviews.countTotal();
-	int count = 0;
-
-
-	while (temp != nullptr && count < limit) {
-		cout << "Current position: " << count + 1 << endl << endl;
-		cout << temp->review << endl << endl;
+	while (temp->next != nullptr) {
+		cout << "Current position: " << count << "\n\n";
+		cout << temp->review << "\n\n";
 
 		istringstream iss(temp->review);
 		string word;
 
 		while (iss >> word) {
 			word = trim(word);
-			if (good.contains(word)) {
-				cout << "Good: " << word << endl;
-				words.addWordAndFreq(word);
 
+			if (good.searchWord(word)) {
+				cout << "Good: " << word << endl;
+				good.addFrequency(word);
 			}
-			else if (bad.contains(word)) {
+			else if (bad.searchWord(word)) {
 				cout << "Bad: " << word << endl;
-				words.addWordAndFreq(word);
+				bad.addFrequency(word);
 			}
 		}
 		temp = temp->next;
 		count++;
 	}
-
 }
+
+
+void ReviewList::sentimentAnalysis(WordList good, WordList bad, const string& review) {
+	cout << review << endl;
+	cout << fixed << setprecision(2);
+	int goodCount = 0;
+	int badCount = 0;
+
+	istringstream iss(review);
+
+	string word;
+	string goodWords = "";
+	string badWords = "";
+	while (iss >> word) {
+		word = trim(word);
+		if (good.searchWord(word)) {
+			goodCount++;
+			goodWords += " - " + word + "\n";
+		}
+		else if (bad.searchWord(word)) {
+			badCount++;
+			badWords += " - " + word + "\n";
+		}
+	}
+
+	int raw = goodCount - badCount;
+	int max = goodCount + badCount;
+	int min = -max;
+	double normalized = (raw - min) / static_cast<double>(max - min);
+
+	double sentiment = 1 + (4 * normalized);
+	string rev = "";
+
+	int comp = round(sentiment);
+	switch (comp) {
+	case 1:
+		rev = "Very Bad";
+		break;
+	case 2:
+		rev = "Bad";
+		break;
+	case 3:
+		rev = "Neutral";
+		break;
+	case 4:
+		rev = "Good";
+		break;
+	case 5:
+		rev = "Very Good";
+		break;
+	}
+	cout << "Positive Words = " << goodCount << endl;
+	cout << goodWords;
+	cout << "Negative Words = " << badCount << endl;
+	cout << badWords;
+	cout << "Sentiment score (1-5) is " << sentiment << ", thus the rating should be equal to " << comp << "(" << rev << ")";
+}
+
+ReviewList::~ReviewList() {
+	ReviewNode* temp;
+	while (head != nullptr) {
+		temp = head;
+		head = head->next;
+		delete temp;
+	}
+}
+
+//word list
+WordList::WordList() {
+	head = nullptr;
+	tail = nullptr;
+}
+
+WordNode* WordList::getHead() {
+	return head;
+}
+WordNode* WordList::getTail() {
+	return tail;
+}
+
+void WordList::addWord(string word) {
+	WordNode* newNode = new WordNode(word);
+	newNode->frequency = 0;
+	if (head == nullptr) {
+		head = tail = newNode;
+	}
+	else {
+		tail->next = newNode;
+		tail = newNode;
+	}
+}
+
+void WordList::addFrequency(string word) {
+	WordNode* current = head;
+	while (current != nullptr) {
+		if (current->word == word) {
+			current->frequency++;
+			return;
+		}
+		current = current->next;
+	}
+}
+
+
+bool WordList::searchWord(string word) {
+	WordNode* checkNode = head;
+	while (checkNode != nullptr) {
+		if (checkNode->word == word) {
+			cout << "word found! \n word: " << word << endl << "frequency: " << checkNode->frequency << endl;
+			return true;
+		}
+		checkNode = checkNode->next;
+	}
+	return false;
+}
+
+void WordList::readWord(string path) {
+	ifstream file(path);
+	if (file.is_open()) {
+		string word;
+		while (getline(file, word)) {
+			this->addWord(word);
+		}
+	}
+	else {
+		cerr << "Error opening the file." << endl;
+	}
+}
+
+WordList::~WordList() {
+	WordNode* temp;
+	while (head != nullptr) {
+		temp = head;
+		head = head->next;
+		delete temp;
+	}
+}
+
+
+
+
+
+
+
+
+
+//set head to null
+LinkedList::LinkedList() {
+	head = nullptr;
+	tail = nullptr;
+}
+
+
+
+
+
+
+
+
+
+
+//assigning pointer location to the node
+//concept explanation
+
+//building block for addReview and addWord
+void LinkedList::addNode(Node* newNode) {
+	if (head == nullptr) { //to add the first node
+		head = tail = newNode; //set head and tail at the same time
+	}
+	else { //else change the tail to new node
+		tail->next = newNode;
+		tail = newNode;
+	}
+}
+
+
+
+
+
+int LinkedList::selectRating(int index) {
+	Node* temp = head;
+	int current = 0;
+	if (temp != nullptr) {
+		while (current < index) {
+			temp = temp->next;
+			current++;
+		}
+		return temp->rating;
+	}
+}
+
+//destructor of the whole linked list
+LinkedList::~LinkedList() {
+	Node* temp;
+	while (head != nullptr) {
+		temp = head;
+		head = head -> next;
+		delete temp;
+	}
+}
+
+//used for CSV trimming, because many commas in the review, stacking with the rating
+//need change cuz chatgpt generated
+
+
+
 
 
 
@@ -282,8 +397,6 @@ void LinkedList::selectionSortWordsAscending() {
 		first = first->next;
 	}
 }
-
-
 
 void LinkedList::radixSortWordsAscending() {
 	if (head == nullptr || head->next == nullptr) return; // No need to sort
@@ -418,60 +531,4 @@ Node* LinkedList::recursionList(Node* currentNode, Node* previousNode) {
 
 void LinkedList::reverseList() {
 	head = recursionList(head);
-}
-
-void LinkedList::sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review) {
-	cout << review << endl;
-	cout << fixed << setprecision(2);
-	int goodCount = 0;
-	int badCount = 0;
-
-	istringstream iss(review);
-
-	string word;
-	string goodWords = "";
-	string badWords = "";
-	while (iss >> word) {
-		word = trim(word);
-		if (good.contains(word)) {
-			goodCount++;
-			goodWords += " - " + word + "\n";
-		}
-		else if (bad.contains(word)) {
-			badCount++;
-			badWords += " - " + word + "\n";
-		}
-	}
-
-	int raw = goodCount - badCount;
-	int max = goodCount + badCount;
-	int min = -max;
-	double normalized = (raw - min) / static_cast<double>(max - min);
-
-	double sentiment= 1 + (4 * normalized);
-	string rev = "";
-
-	int comp = round(sentiment);
-	switch (comp) {
-	case 1:
-		rev = "Very Bad";
-		break;
-	case 2:
-		rev = "Bad";
-		break;
-	case 3:
-		rev = "Neutral";
-		break;
-	case 4: 
-		rev = "Good";
-		break;
-	case 5:
-		rev = "Very Good";
-		break;
-	}
-	cout << "Positive Words = " << goodCount << endl;
-	cout << goodWords;
-	cout << "Negative Words = " << badCount << endl;
-	cout << badWords;
-	cout << "Sentiment score (1-5) is " << sentiment << ", thus the rating should be equal to " << comp << "(" << rev <<")";
 }

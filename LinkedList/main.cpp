@@ -9,22 +9,26 @@ using namespace std;
 using namespace std::chrono;
 int main() {
 	//declare reviews, positive words, and negative words
-	LinkedList reviewsList, positiveWordList, negativeWordList, wordList;
+	ReviewList reviewsList;
+	WordList positiveWordList, negativeWordList;
 
-	reviewsList.readCSV(reviewsList, "testing.CSV");
+	reviewsList.readCSV("testing.CSV");
 	//reviewsList.readCSV(reviewsList, "testing.CSV");
-	positiveWordList.readWords(positiveWordList, "positive-words.txt");
-	negativeWordList.readWords(negativeWordList, "negative-words.txt");
+	positiveWordList.readWord("positive-words.txt");
+	negativeWordList.readWord("negative-words.txt");
+	reviewsList.print(5);
+	reviewsList.updateFrequency(positiveWordList, negativeWordList);
+	reviewsList.sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(3));
 
-	wordList.storeFreq(positiveWordList, negativeWordList, reviewsList, wordList);
-	auto start = high_resolution_clock::now();
-	wordList.quickSortWordsAscending();
-	auto end = high_resolution_clock::now();
-	////wordList.reverseList();
-	wordList.print(wordList.countTotal(), 2);
+	//wordList.storeFreq(positiveWordList, negativeWordList, reviewsList, wordList);
+	//auto start = high_resolution_clock::now();
+	//wordList.radixSortWordsAscending();
+	//auto end = high_resolution_clock::now();
+	//////wordList.reverseList();
+	//wordList.print(wordList.countTotal(), 2);
 
-	auto elapsed = duration_cast<microseconds>(end - start).count();
-	cout << elapsed << " microseconds.";
+	//auto elapsed = duration_cast<microseconds>(end - start).count();
+	//cout << elapsed << " microseconds.";
 	//reviewsList.print(5, false);
 
 	//positiveWordList.print(20, true);

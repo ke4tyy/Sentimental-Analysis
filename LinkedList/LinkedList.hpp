@@ -4,10 +4,8 @@
 #define LINKEDLIST_HPP
 
 #include <string>
-
 using namespace std;
 
-//Explanation: Struct, grouping variables as members of a structure
 struct Node {
 	string review, word;
 	int rating, frequency;
@@ -15,7 +13,59 @@ struct Node {
 
 	//declaring constructor
 	Node(string review, int rating);
- };
+};
+
+//Explanation: Struct, grouping variables as members of a structure
+struct ReviewNode {
+	string review;
+	int rating;
+	ReviewNode* next;
+	ReviewNode(string review, int rating);
+};
+
+struct WordNode {
+	string word;
+	int frequency;
+	WordNode* next;
+
+	WordNode(string word);
+};
+
+class WordList {
+private:
+	WordNode* head;
+	WordNode* tail;
+
+public:
+	WordList();
+	WordNode* getHead();
+	WordNode* getTail();
+	void addWord(string word);
+	void addFrequency(string word);
+	bool searchWord(string word);
+	void readWord(string path);
+	~WordList();
+};
+
+class ReviewList {
+private:
+	ReviewNode* head;
+	ReviewNode* tail;
+
+public: 
+	ReviewList();
+	void addReview(string review, int rating);
+	int countTotal();
+	string selectReview(int index);
+
+	void readCSV(string file);
+	void print(int amount);
+	string trim(string str);
+	void updateFrequency(WordList& good, WordList& bads);
+	void sentimentAnalysis(WordList good, WordList bad, const string& review);
+	~ReviewList();
+};
+
 
 //Linked List class, 
 class LinkedList {
@@ -26,18 +76,9 @@ private:
 
 public:
 	LinkedList();
-	void addReview(string review, int rating);
-	void addWord(string word);
-	void addWordAndFreq(string word);
-
-	void print(int amount, int choice);
-	int countTotal();
-	bool contains(const string& word);
-	string selectReview(int index);
 	int selectRating(int index);
 
 
-	void storeFreq(LinkedList& good, LinkedList& bad, LinkedList& reviews, LinkedList& words);
 
 
 	void selectionSortWordsAscending();
@@ -46,13 +87,9 @@ public:
 
 	Node* recursionList(Node* currentNode, Node* previousNode = nullptr);
 	void reverseList();
-	void sentimentAnalysis(LinkedList& good, LinkedList& bad, const string& review);
+
 	//reading CSV function
-	void readCSV(LinkedList& llist, const string& file);
-	void readWords(LinkedList& llist, const string& file);
 	~LinkedList();
 };
-
-
 
 #endif
