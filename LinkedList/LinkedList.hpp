@@ -6,21 +6,14 @@
 #include <string>
 using namespace std;
 
-struct Node {
-	string review, word;
-	int rating, frequency;
-	Node* next; //pointer location
-
-	//declaring constructor
-	Node(string review, int rating);
-};
 
 //Explanation: Struct, grouping variables as members of a structure
 struct ReviewNode {
-	string review;
-	int rating;
+	string review, goodWords, badWords;
+	int rating, good, bad;
+	double sentiment;
 	ReviewNode* next;
-	ReviewNode(string review, int rating);
+	ReviewNode(string review, int rating, int goodCount, int badCount, double sentiment, string goodWords, string badWords);
 };
 
 struct WordNode {
@@ -38,12 +31,20 @@ private:
 
 public:
 	WordList();
-	WordNode* getHead();
-	WordNode* getTail();
 	void addWord(string word);
 	void addFrequency(string word);
 	bool searchWord(string word);
 	void readWord(string path);
+
+	void selectionSortWordsAscending();
+	void radixSortWordsAscending();
+	void quickSortWordsAscending();
+	WordNode* recursionList(WordNode* current, WordNode* previous = nullptr);
+	void reverseList();
+
+	void printWordsAndFrequency();
+
+
 	~WordList();
 };
 
@@ -54,42 +55,18 @@ private:
 
 public: 
 	ReviewList();
-	void addReview(string review, int rating);
+	void addReview(string review, int rating, int goodCount, int badCount, double sentiment, string good, string bad);
 	int countTotal();
-	string selectReview(int index);
+	ReviewNode* selectReview(int index);
 
-	void readCSV(string file);
+	void readCSV(string path, WordList& good, WordList& bad);
 	void print(int amount);
 	string trim(string str);
 	void updateFrequency(WordList& good, WordList& bads);
-	void sentimentAnalysis(WordList good, WordList bad, const string& review);
+
+	void comparison(WordList& good, WordList& bad, ReviewNode* review);
+	void sentimentAnalysis(WordList& good, WordList& bad, ReviewNode* reviews);
 	~ReviewList();
-};
-
-
-//Linked List class, 
-class LinkedList {
-private:
-	Node* head;
-	Node* tail;
-	void addNode(Node* newNode);
-
-public:
-	LinkedList();
-	int selectRating(int index);
-
-
-
-
-	void selectionSortWordsAscending();
-	void radixSortWordsAscending();
-	void quickSortWordsAscending();
-
-	Node* recursionList(Node* currentNode, Node* previousNode = nullptr);
-	void reverseList();
-
-	//reading CSV function
-	~LinkedList();
 };
 
 #endif
