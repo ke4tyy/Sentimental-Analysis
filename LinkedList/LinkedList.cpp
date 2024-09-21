@@ -6,8 +6,9 @@
 #include <cmath>
 #include <algorithm>
 #include "LinkedList.hpp"
-
-
+#include <ctime>
+#include <chrono>
+using namespace std::chrono;
 
 //default constructor 
 ReviewNode::ReviewNode(string review, int rating, int goodCount, int badCount, double sentiment, string good, string bad) {
@@ -179,8 +180,22 @@ void ReviewList::updateFrequency(WordList& good, WordList& bad) {
 		}
 
 		//sorting
-		good.radixSortWordsAscending();
-		bad.radixSortWordsAscending();
+		auto start = steady_clock::now();
+
+		good.radixSort();
+
+		auto end = steady_clock::now();
+
+		auto elapsed = duration_cast<microseconds>(end - start).count();
+		cout << endl << "sort time : " << elapsed << " microseconds" << endl;
+
+		start = steady_clock::now();
+		bad.radixSort();
+		end = steady_clock::now();
+		elapsed = duration_cast<microseconds>(end - start).count();
+		cout << endl << "sort time : " << elapsed << " microseconds" << endl;
+
+
 		temp = temp->next;
 		count++;
 	}
@@ -256,6 +271,7 @@ void ReviewList::searchRelevant(string searchWord) {
 	cout << "Frequency of searched word : " << wordCount << endl;
 }
 
+
 ReviewList::~ReviewList() {
 	ReviewNode* temp;
 	while (head != nullptr) {
@@ -321,7 +337,7 @@ void WordList::readWord(string path) {
 	}
 }
 
-void WordList::selectionSortWordsAscending() {
+void WordList::selectionSort() {
 	WordNode* first = head;
 
 	while (first != nullptr) {
@@ -343,7 +359,7 @@ void WordList::selectionSortWordsAscending() {
 	}
 }
 
-void WordList::radixSortWordsAscending() {
+void WordList::radixSort() {
 	if (head == nullptr || head->next == nullptr) return; // No need to sort
 
 	// Find the maximum frequency in the linked list
@@ -412,54 +428,98 @@ void WordList::radixSortWordsAscending() {
 	}
 }
 
-void WordList::quickSortWordsAscending() {
-	if (head == nullptr || head->next == nullptr) return; // No need to sort
-
-	// Find the tail of the linked list
-	WordNode* tail = head;
-	while (tail != nullptr && tail->next != nullptr) {
-		tail = tail->next;
+void WordList::bubbleSort() {
+	if (head == nullptr) {
+		return;
 	}
 
-	// Quick Sort logic
-	WordNode* start = head;
-	WordNode* end = tail;
+	WordNode* current;
+	WordNode* previous = nullptr;
+	bool swapped;
 
-	// Stack-based quicksort approach without separate partition function
-	while (start != end && start->next != end) {
-		WordNode* pivot = start;
-		WordNode* current = start->next;
-		WordNode* prev = start;
+	do {
+		swapped = false;
+		current = head;
 
-		// Partitioning the list using the pivot
-		while (current != end->next) {
-			if (current->frequency < pivot->frequency) {
-				prev = prev->next;
-				swap(prev->word, current->word);
-				swap(prev->frequency, current->frequency);
+		while (current->next != previous) {
+			if (current->frequency > current->next->frequency) {
+				string word = current->word;
+				int frequency = current->frequency;
+
+				current->word = current->next->word;
+				current->frequency = current->next->frequency;
+
+				current->next->word = word;
+				current->next->frequency = frequency;
+
+				swapped = true;
 			}
 			current = current->next;
 		}
+		previous = current;
+	} while (swapped);
+}
 
-		// Swapping the pivot element with the partition point
-		swap(pivot->word, prev->word);
-		swap(pivot->frequency, prev->frequency);
+// Helper function to merge two sorted linked lists
+WordNode* WordList::merge(WordNode* left, WordNode* right) {
+	// Base cases
+	if (!left) return right;
+	if (!right) return left;
 
-		// Now the list is partitioned; quicksort left and right sub-lists
-		WordNode* leftTail = prev;
-		WordNode* rightStart = prev->next;
-
-		// Recursive-like loop for the left side
-		if (start != leftTail) {
-			tail = leftTail;
-			end = leftTail;
-		}
-		else {
-			start = rightStart;
-			end = tail;
-		}
+	// Choose the smaller node and recursively merge the rest
+	if (left->frequency <= right->frequency) {
+		left->next = merge(left->next, right);
+		return left;
+	}
+	else {
+		right->next = merge(left, right->next);
+		return right;
 	}
 }
+
+// Helper function to find the middle of the list using slow/fast pointer technique
+WordNode* WordList::findMiddle(WordNode* head) {
+	if (!head) return nullptr;
+
+	WordNode* slow = head;
+	WordNode* fast = head->next;
+
+	// Move `slow` by one and `fast` by two steps
+	while (fast != nullptr && fast->next != nullptr) {
+		slow = slow->next;
+		fast = fast->next->next;
+	}
+
+	return slow;
+}
+
+// The recursive mergeSort function
+WordNode* WordList::mergeSort(WordNode* head) {
+	// Base case: If the list is empty or contains only one node, it is already sorted
+	if (!head || !head->next) {
+		return head;
+	}
+
+	// Step 1: Split the list into two halves
+	WordNode* middle = findMiddle(head);
+	WordNode* secondHalf = middle->next;
+	middle->next = nullptr;  // Split the list into two parts
+
+	// Step 2: Recursively sort both halves
+	WordNode* left = mergeSort(head);
+	WordNode* right = mergeSort(secondHalf);
+
+	// Step 3: Merge the sorted halves
+	return merge(left, right);
+}
+
+// Wrapper function for mergeSort to sort the entire list
+void WordList::mergeSort() {
+	head = mergeSort(head);
+}
+
+
+
 
 void WordList::printWordsAndFrequency() {
 	WordNode* currentNode = head;

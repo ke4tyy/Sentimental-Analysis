@@ -36,8 +36,8 @@ int main() {
 	//merged.radixSortWordsAscending();
 	//merged.printWordsAndFrequency();
 
-	summary(reviewsList, positiveWordList, negativeWordList);
+	//summary(reviewsList, positiveWordList, negativeWordList);
 
-	reviewsList.searchRelevant("nice");
+	//reviewsList.searchRelevant("great");
 	return 0;
 }

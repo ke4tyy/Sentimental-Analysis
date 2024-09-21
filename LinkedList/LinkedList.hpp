@@ -34,9 +34,15 @@ public:
 	bool searchWord(string word);
 	void readWord(string path);
 
-	void selectionSortWordsAscending();
-	void radixSortWordsAscending();
-	void quickSortWordsAscending();
+	void selectionSort();
+	void radixSort();
+	void bubbleSort();
+	
+	WordNode* merge(WordNode* left, WordNode* right);
+	WordNode* findMiddle(WordNode* head);
+	WordNode* mergeSort(WordNode* head);
+	void mergeSort();
+
 	WordNode* recursionList(WordNode* current, WordNode* previous);
 	void reverseList();
 
@@ -65,6 +71,7 @@ public:
 
 	void searchRelevant(string searchWord);
 
+	void sentimentSummary();
 
 	~ReviewList();
 };
