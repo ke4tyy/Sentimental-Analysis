@@ -63,6 +63,7 @@ public:
 	void comparison(WordList& good, WordList& bad, ReviewNode* review);
 	void sentimentAnalysis(WordList& good, WordList& bad, ReviewNode* reviews);
 
+	void searchRelevant(string searchWord);
 
 
 	~ReviewList();

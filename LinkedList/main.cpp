@@ -19,6 +19,8 @@ int main() {
 	reviewsList.readCSV("testing.CSV", positiveWordList, negativeWordList);
 	reviewsList.print(5);
 	reviewsList.updateFrequency(positiveWordList, negativeWordList);
+
+
 	//reviewsList.sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(8));
 
 	//positiveWordList.radixSortWordsAscending();
@@ -36,5 +38,6 @@ int main() {
 
 	summary(reviewsList, positiveWordList, negativeWordList);
 
+	reviewsList.searchRelevant("nice");
 	return 0;
 }

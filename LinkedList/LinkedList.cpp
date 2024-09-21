@@ -158,7 +158,7 @@ void ReviewList::updateFrequency(WordList& good, WordList& bad) {
 	ReviewNode* temp = head;
 	int count = 1;
 
-	while (temp->next != nullptr) {
+	while (temp != nullptr) {
 		cout << "Current position: " << count << "\n\n";
 		cout << temp->review << "\n\n";
 
@@ -226,6 +226,34 @@ void ReviewList::sentimentAnalysis(WordList& good, WordList& bad, ReviewNode* re
 	cout << "Negative Words = " << reviews->bad << endl;
 	cout << reviews->badWords;
 	cout << "Sentiment score (1-5) is " << reviews->sentiment << ", thus the rating should be equal to " << comp << "(" << rev << ")" << endl;
+}
+
+void ReviewList::searchRelevant(string searchWord) {
+	ReviewNode* currentNode = head;
+	int wordCount = 0;
+	int index = 0;
+	while (currentNode != nullptr) {
+		istringstream iss(currentNode->review);
+		string word;
+		bool printedOut = false;
+		while (iss >> word) {
+			word = trim(word);
+			if (word == searchWord) {
+				if (!printedOut) {
+					cout << "Review with word: " << index+1 << "\n \n";
+					cout << currentNode->review << endl << endl;
+					cout << string(50, '-') << endl << endl;
+					printedOut = true;
+					index++;
+				}
+
+				wordCount++;
+			}
+		}
+		currentNode = currentNode->next;
+	}
+	cout << "Total found reviews with searched word : " << index << endl;
+	cout << "Frequency of searched word : " << wordCount << endl;
 }
 
 ReviewList::~ReviewList() {
