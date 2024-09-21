@@ -25,13 +25,11 @@ struct WordNode {
 };
 
 class WordList {
-private:
+public:
 	WordNode* head;
 	WordNode* tail;
-
-public:
 	WordList();
-	void addWord(string word);
+	void addWord(string word, int frequency);
 	void addFrequency(string word);
 	bool searchWord(string word);
 	void readWord(string path);
@@ -39,7 +37,7 @@ public:
 	void selectionSortWordsAscending();
 	void radixSortWordsAscending();
 	void quickSortWordsAscending();
-	WordNode* recursionList(WordNode* current, WordNode* previous = nullptr);
+	WordNode* recursionList(WordNode* current, WordNode* previous);
 	void reverseList();
 
 	void printWordsAndFrequency();
@@ -49,11 +47,9 @@ public:
 };
 
 class ReviewList {
-private:
+public: 
 	ReviewNode* head;
 	ReviewNode* tail;
-
-public: 
 	ReviewList();
 	void addReview(string review, int rating, int goodCount, int badCount, double sentiment, string good, string bad);
 	int countTotal();
@@ -66,7 +62,14 @@ public:
 
 	void comparison(WordList& good, WordList& bad, ReviewNode* review);
 	void sentimentAnalysis(WordList& good, WordList& bad, ReviewNode* reviews);
+
+
+
 	~ReviewList();
 };
+
+WordList mergeWordList(WordList& wordlist1, WordList& wordlist2);
+
+void summary(ReviewList& reviews, WordList& good, WordList& bad);
 
 #endif

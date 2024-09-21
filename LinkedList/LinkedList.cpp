@@ -177,6 +177,10 @@ void ReviewList::updateFrequency(WordList& good, WordList& bad) {
 				bad.addFrequency(word);
 			}
 		}
+
+		//sorting
+		good.radixSortWordsAscending();
+		bad.radixSortWordsAscending();
 		temp = temp->next;
 		count++;
 	}
@@ -235,16 +239,15 @@ ReviewList::~ReviewList() {
 
 
 
-
 //word list
 WordList::WordList() {
 	head = nullptr;
 	tail = nullptr;
 }
 
-void WordList::addWord(string word) {
+void WordList::addWord(string word, int frequency) {
 	WordNode* newNode = new WordNode(word);
-	newNode->frequency = 0;
+	newNode->frequency = frequency;
 	if (head == nullptr) {
 		head = tail = newNode;
 	}
@@ -282,7 +285,7 @@ void WordList::readWord(string path) {
 	if (file.is_open()) {
 		string word;
 		while (getline(file, word)) {
-			this->addWord(word);
+			this->addWord(word, 0);
 		}
 	}
 	else {
@@ -434,7 +437,7 @@ void WordList::printWordsAndFrequency() {
 	WordNode* currentNode = head;
 
 	if (head != nullptr) {
-		while (currentNode->next != nullptr) {
+		while (currentNode != nullptr) {
 			if (currentNode->frequency == 0) {
 				currentNode = currentNode->next;
 			}
@@ -457,7 +460,18 @@ WordNode* WordList::recursionList(WordNode* current, WordNode* previous) {
 }
 
 void WordList::reverseList() {
-	head = recursionList(head);
+	cout << head->word << endl << tail->word;
+
+	if (head == nullptr) {
+		return;
+	}
+
+	WordNode* prevHead = head;
+	head = recursionList(head, nullptr);
+	tail = prevHead;
+
+	cout << head->word << endl << tail->word;
+
 }
 
 WordList::~WordList() {
@@ -469,4 +483,75 @@ WordList::~WordList() {
 	}
 }
 
+WordList mergeWordList(WordList& wordlist1, WordList& wordlist2) {
+	WordList mergedList;
 
+	//loop through list 1 first
+	WordNode* currentNode = wordlist1.head;
+	while (currentNode != nullptr) {
+		mergedList.addWord(currentNode->word, currentNode->frequency);
+		currentNode = currentNode->next;
+	}
+
+	//loop through list 2
+	currentNode = wordlist2.head;
+	while (currentNode != nullptr) {
+		mergedList.addWord(currentNode->word, currentNode->frequency);
+		currentNode = currentNode->next;
+	}
+
+
+	return mergedList;
+}
+
+void summary(ReviewList& reviews, WordList& good, WordList& bad) {
+	ReviewNode* countReview = reviews.head;
+	int reviewCount = 0;
+	while (countReview != nullptr) {
+		reviewCount++;
+		countReview = countReview->next;
+	}
+
+	WordNode* countWordsFreq = good.head;
+
+	WordNode* maxGoodFrequencyWord = good.head;
+	int goodWordsFrequency = 0;
+	while (countWordsFreq != nullptr) {
+		if (maxGoodFrequencyWord->frequency < countWordsFreq->frequency) {
+			maxGoodFrequencyWord = countWordsFreq;
+		}
+		goodWordsFrequency += countWordsFreq->frequency;
+		countWordsFreq = countWordsFreq->next;
+	}
+
+	WordNode* maxBadFrequencyWord = bad.head;
+	countWordsFreq = bad.head;
+	int badWordsFrequency = 0;
+	while (countWordsFreq != nullptr) {
+		if (maxBadFrequencyWord->frequency < countWordsFreq->frequency) {
+			maxBadFrequencyWord = countWordsFreq;
+		}
+		badWordsFrequency += countWordsFreq->frequency;
+		countWordsFreq = countWordsFreq->next;
+	}
+
+	//frequency of good counts
+	cout << "Frequency of each GOOD words used in overall reviews, listed in ascending order based on frequency: " << "\n \n";
+	good.printWordsAndFrequency();
+	cout << endl << string(70, '-') << endl;
+
+	//frequency of bad counts
+	cout << "Frequency of each BAD words used in overall reviews, listed in ascending order based on frequency: " << "\n \n";
+	bad.printWordsAndFrequency();
+	cout << endl << string(70, '-') << endl;
+
+	//print summary
+	cout << "Total Reviews: " << reviewCount << endl;
+	cout << "Total Occurence of positive words: " << goodWordsFrequency << endl;
+	cout << "Total Occurence of negative words: " << badWordsFrequency << endl;
+	cout << endl << string(70, '-') << endl;
+	
+	//max used words
+	cout << "Maximum used GOOD word in the reviews : " << maxGoodFrequencyWord->word << endl << "frequency : " << maxGoodFrequencyWord->frequency << endl;
+	cout << "Maximum used BAD word in the reviews : " << maxBadFrequencyWord->word << endl << "frequency : " << maxBadFrequencyWord->frequency << endl;
+}

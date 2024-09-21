@@ -19,15 +19,22 @@ int main() {
 	reviewsList.readCSV("testing.CSV", positiveWordList, negativeWordList);
 	reviewsList.print(5);
 	reviewsList.updateFrequency(positiveWordList, negativeWordList);
-	reviewsList.sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(8));
+	//reviewsList.sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(8));
 
-	positiveWordList.radixSortWordsAscending();
-	positiveWordList.reverseList();
-	positiveWordList.printWordsAndFrequency();
+	//positiveWordList.radixSortWordsAscending();
+	//positiveWordList.reverseList();
+	//positiveWordList.printWordsAndFrequency();
 
-	reviewsList.comparison(positiveWordList, negativeWordList, reviewsList.selectReview(2));
+	//reviewsList.comparison(positiveWordList, negativeWordList, reviewsList.selectReview(2));
 
-	reviewsList.print(3);
+	//reviewsList.print(3);
+
+	//WordList merged = mergeWordList(positiveWordList, negativeWordList);
+	//merged.printWordsAndFrequency();
+	//merged.radixSortWordsAscending();
+	//merged.printWordsAndFrequency();
+
+	summary(reviewsList, positiveWordList, negativeWordList);
 
 	return 0;
 }
