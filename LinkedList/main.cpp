@@ -14,18 +14,19 @@ int main() {
 
 
 	//reviewsList.readCSV(reviewsList, "testing.CSV");
-	positiveWordList.readWord("positive-words.txt");
+	positiveWordList.addWordFromFront("positive-words.txt");
 	negativeWordList.readWord("negative-words.txt");
 	reviewsList.readCSV("testing.CSV", positiveWordList, negativeWordList);
 	reviewsList.print(5);
 	reviewsList.updateFrequency(positiveWordList, negativeWordList);
 
 
+
 	//reviewsList.sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(8));
 
-	//positiveWordList.radixSortWordsAscending();
+	positiveWordList.radixSort();
 	//positiveWordList.reverseList();
-	//positiveWordList.printWordsAndFrequency();
+	positiveWordList.printWordsAndFrequency();
 
 	//reviewsList.comparison(positiveWordList, negativeWordList, reviewsList.selectReview(2));
 

@@ -170,35 +170,34 @@ void ReviewList::updateFrequency(WordList& good, WordList& bad) {
 			word = trim(word);
 
 			if (good.searchWord(word)) {
-				cout << "Good: " << word << endl;
+				//cout << "Good: " << word << endl;
 				good.addFrequency(word);
 			}
 			else if (bad.searchWord(word)) {
-				cout << "Bad: " << word << endl;
+				//cout << "Bad: " << word << endl;
 				bad.addFrequency(word);
 			}
 		}
 
-		//sorting
-		auto start = steady_clock::now();
-
-		good.radixSort();
-
-		auto end = steady_clock::now();
-
-		auto elapsed = duration_cast<microseconds>(end - start).count();
-		cout << endl << "sort time : " << elapsed << " microseconds" << endl;
-
-		start = steady_clock::now();
-		bad.radixSort();
-		end = steady_clock::now();
-		elapsed = duration_cast<microseconds>(end - start).count();
-		cout << endl << "sort time : " << elapsed << " microseconds" << endl;
-
-
 		temp = temp->next;
 		count++;
 	}
+	//sorting
+	auto start = steady_clock::now();
+
+	good.radixSort();
+
+	auto end = steady_clock::now();
+
+	auto elapsed = duration_cast<microseconds>(end - start).count();
+	cout << endl << "sort time : " << elapsed << " microseconds" << endl;
+
+	start = steady_clock::now();
+	bad.radixSort();
+	end = steady_clock::now();
+	elapsed = duration_cast<microseconds>(end - start).count();
+	cout << endl << "sort time : " << elapsed << " microseconds" << endl;
+
 }
 
 void ReviewList::comparison(WordList& good, WordList& bad, ReviewNode* reviews) {
@@ -286,19 +285,39 @@ ReviewList::~ReviewList() {
 //word list
 WordList::WordList() {
 	head = nullptr;
-	tail = nullptr;
 }
 
-void WordList::addWord(string word, int frequency) {
+void WordList::addWordFromFront(string word) {
 	WordNode* newNode = new WordNode(word);
-	newNode->frequency = frequency;
+	auto start = high_resolution_clock::now();
 	if (head == nullptr) {
-		head = tail = newNode;
+		head = newNode;
 	}
 	else {
-		tail->next = newNode;
-		tail = newNode;
+		newNode->next = head;
+		head = newNode;
 	}
+	auto end = high_resolution_clock::now();
+	auto elapsed = duration_cast<nanoseconds>(end - start).count();
+	cout << endl << "Time elapsed : " << elapsed << " nanoseconds. " << endl;
+}
+
+void WordList::addWordFromEnd(string word) {
+	WordNode* newNode = new WordNode(word);
+	auto start = high_resolution_clock::now();
+	if (head == nullptr) {
+		head = newNode;
+	}
+	else {
+		WordNode* temp = head;
+		while (temp->next != nullptr) {
+			temp = temp->next;
+		}
+		temp->next = newNode;
+	}
+	auto end = high_resolution_clock::now();
+	auto elapsed = duration_cast<nanoseconds>(end - start).count();
+	cout << endl << "Time elapsed : " << elapsed << " nanoseconds. " << endl;
 }
 
 void WordList::addFrequency(string word) {
@@ -324,18 +343,6 @@ bool WordList::searchWord(string word) {
 	return false;
 }
 
-void WordList::readWord(string path) {
-	ifstream file(path);
-	if (file.is_open()) {
-		string word;
-		while (getline(file, word)) {
-			this->addWord(word, 0);
-		}
-	}
-	else {
-		cerr << "Error opening the file." << endl;
-	}
-}
 
 void WordList::selectionSort() {
 	WordNode* first = head;
@@ -537,30 +544,31 @@ void WordList::printWordsAndFrequency() {
 	}
 }
 
-WordNode* WordList::recursionList(WordNode* current, WordNode* previous) {
-	if (!current) {
-		return previous;
-	}
-
-	WordNode* nextNode = current->next;
-	current->next = previous;
-	return recursionList(nextNode, current);
-}
-
-void WordList::reverseList() {
-	cout << head->word << endl << tail->word;
-
-	if (head == nullptr) {
-		return;
-	}
-
-	WordNode* prevHead = head;
-	head = recursionList(head, nullptr);
-	tail = prevHead;
-
-	cout << head->word << endl << tail->word;
-
-}
+//
+//WordNode* WordList::recursionList(WordNode* current, WordNode* previous) {
+//	if (!current) {
+//		return previous;
+//	}
+//
+//	WordNode* nextNode = current->next;
+//	current->next = previous;
+//	return recursionList(nextNode, current);
+//}
+//
+//void WordList::reverseList() {
+//	cout << head->word << endl << tail->word;
+//
+//	if (head == nullptr) {
+//		return;
+//	}
+//
+//	WordNode* prevHead = head;
+//	head = recursionList(head, nullptr);
+//	tail = prevHead;
+//
+//	cout << head->word << endl << tail->word;
+//
+//}
 
 WordList::~WordList() {
 	WordNode* temp;
@@ -571,26 +579,26 @@ WordList::~WordList() {
 	}
 }
 
-WordList mergeWordList(WordList& wordlist1, WordList& wordlist2) {
-	WordList mergedList;
-
-	//loop through list 1 first
-	WordNode* currentNode = wordlist1.head;
-	while (currentNode != nullptr) {
-		mergedList.addWord(currentNode->word, currentNode->frequency);
-		currentNode = currentNode->next;
-	}
-
-	//loop through list 2
-	currentNode = wordlist2.head;
-	while (currentNode != nullptr) {
-		mergedList.addWord(currentNode->word, currentNode->frequency);
-		currentNode = currentNode->next;
-	}
-
-
-	return mergedList;
-}
+//WordList mergeWordList(WordList& wordlist1, WordList& wordlist2) {
+//	WordList mergedList;
+//
+//	//loop through list 1 first
+//	WordNode* currentNode = wordlist1.head;
+//	while (currentNode != nullptr) {
+//		mergedList.addWord(currentNode->word, currentNode->frequency);
+//		currentNode = currentNode->next;
+//	}
+//
+//	//loop through list 2
+//	currentNode = wordlist2.head;
+//	while (currentNode != nullptr) {
+//		mergedList.addWord(currentNode->word, currentNode->frequency);
+//		currentNode = currentNode->next;
+//	}
+//
+//
+//	return mergedList;
+//}
 
 void summary(ReviewList& reviews, WordList& good, WordList& bad) {
 	ReviewNode* countReview = reviews.head;

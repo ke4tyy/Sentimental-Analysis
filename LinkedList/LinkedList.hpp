@@ -12,14 +12,14 @@ struct ReviewNode {
 	string review, goodWords, badWords;
 	int rating, good, bad;
 	double sentiment;
-	ReviewNode* next;
+	ReviewNode* next = nullptr;
 	ReviewNode(string review, int rating, int goodCount, int badCount, double sentiment, string goodWords, string badWords);
 };
 
 struct WordNode {
 	string word;
-	int frequency;
-	WordNode* next;
+	int frequency = 0;
+	WordNode* next = nullptr;
 
 	WordNode(string word);
 };
@@ -27,12 +27,11 @@ struct WordNode {
 class WordList {
 public:
 	WordNode* head;
-	WordNode* tail;
 	WordList();
-	void addWord(string word, int frequency);
+	void addWordFromFront(string word);
+	void addWordFromEnd(string word);
 	void addFrequency(string word);
 	bool searchWord(string word);
-	void readWord(string path);
 
 	void selectionSort();
 	void radixSort();
