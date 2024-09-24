@@ -22,6 +22,7 @@ struct WordNode {
 	WordNode* next = nullptr;
 
 	WordNode(string word);
+	WordNode();
 };
 
 class WordList {
@@ -32,21 +33,16 @@ public:
 	void addWordFromEnd(string word);
 	void addFrequency(string word);
 	bool searchWord(string word);
-
+	void readWord(string path);
 	void selectionSort();
 	void radixSort();
 	void bubbleSort();
 	
+	WordNode* findMiddle(WordNode* node);
 	WordNode* merge(WordNode* left, WordNode* right);
-	WordNode* findMiddle(WordNode* head);
-	WordNode* mergeSort(WordNode* head);
-	void mergeSort();
-
-	WordNode* recursionList(WordNode* current, WordNode* previous);
-	void reverseList();
-
+	WordNode* mergeSort(WordNode* node);
 	void printWordsAndFrequency();
-
+	void mergeSort();
 
 	~WordList();
 };
@@ -63,8 +59,7 @@ public:
 	void readCSV(string path, WordList& good, WordList& bad);
 	void print(int amount);
 	string trim(string str);
-	void updateFrequency(WordList& good, WordList& bads);
-
+	double calculateSentiment(int goodCount, int badCount);
 	void comparison(WordList& good, WordList& bad, ReviewNode* review);
 	void sentimentAnalysis(WordList& good, WordList& bad, ReviewNode* reviews);
 
@@ -75,8 +70,9 @@ public:
 	~ReviewList();
 };
 
-WordList mergeWordList(WordList& wordlist1, WordList& wordlist2);
 
 void summary(ReviewList& reviews, WordList& good, WordList& bad);
+
+
 
 #endif

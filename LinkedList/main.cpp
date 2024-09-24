@@ -13,32 +13,30 @@ int main() {
 	WordList positiveWordList, negativeWordList;
 
 
-	//reviewsList.readCSV(reviewsList, "testing.CSV");
-	positiveWordList.addWordFromFront("positive-words.txt");
+	cout << endl << "adding positive words";
+	positiveWordList.readWord("positive-words.txt");
+	cout << endl << "adding negative words";
 	negativeWordList.readWord("negative-words.txt");
 	reviewsList.readCSV("testing.CSV", positiveWordList, negativeWordList);
-	reviewsList.print(5);
-	reviewsList.updateFrequency(positiveWordList, negativeWordList);
+
+	//reviewsList.updateFrequency(positiveWordList, negativeWordList);
 
 
 
-	//reviewsList.sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(8));
 
-	positiveWordList.radixSort();
-	//positiveWordList.reverseList();
+
+	positiveWordList.mergeSort();
+	negativeWordList.mergeSort();
+
 	positiveWordList.printWordsAndFrequency();
 
-	//reviewsList.comparison(positiveWordList, negativeWordList, reviewsList.selectReview(2));
+	reviewsList.sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(3));
 
-	//reviewsList.print(3);
+	reviewsList.comparison(positiveWordList, negativeWordList, reviewsList.selectReview(8));
 
-	//WordList merged = mergeWordList(positiveWordList, negativeWordList);
-	//merged.printWordsAndFrequency();
-	//merged.radixSortWordsAscending();
-	//merged.printWordsAndFrequency();
 
-	//summary(reviewsList, positiveWordList, negativeWordList);
+	summary(reviewsList, positiveWordList, negativeWordList);
+	reviewsList.sentimentSummary();
 
-	//reviewsList.searchRelevant("great");
 	return 0;
 }
