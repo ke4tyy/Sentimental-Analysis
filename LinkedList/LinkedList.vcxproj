@@ -127,11 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="LinkedList.hpp" />
+    <ClInclude Include="WordLL.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ReviewLL.cpp" />
+    <ClCompile Include="WordLL.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReviewLL.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
