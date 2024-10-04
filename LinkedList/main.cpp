@@ -1,5 +1,5 @@
 #include "ReviewLL.hpp"
-
+#include "Sorting.hpp"
 
 #include <iostream>
 
@@ -14,67 +14,47 @@ int main() {
 	positiveWordList.readWord("positive-words.txt");
 	cout << endl << "adding negative words";
 	negativeWordList.readWord("negative-words.txt");
-	reviewsList.readCSV("testing.CSV", positiveWordList, negativeWordList);
-
-	////explanation
-	////SELECTION SORT
-	//positiveWordList.selectionSort();
-	//negativeWordList.selectionSort();
-	//positiveWordList.selectionSortAlphabetically();
-	//negativeWordList.selectionSortAlphabetically();
-
-	////BUBBLE SORT
-	//positiveWordList.bubbleSort();
-	//negativeWordList.bubbleSort();
-	//positiveWordList.bubbleSortAlphabetically();
-	//negativeWordList.bubbleSortAlphabetically();
-
-	//RADIX SORT
-	positiveWordList.radixSort();
-	negativeWordList.radixSort();
-	//positiveWordList.radixSortAlphabetically();
-	//negativeWordList.radixSortAlphabetically();
-
-	////MERGE SORT
-	//positiveWordList.mergeSort();
-	//negativeWordList.mergeSort();
-	//positiveWordList.mergeSortAlphabetically();
-	//negativeWordList.mergeSortAlphabetically();
+	reviewsList.readCSV("tripadvisor_hotel_reviews.CSV", positiveWordList, negativeWordList);
 
 
-	////searching for positive words 
-	////start range of the word list
-	//positiveWordList.linearSearch("amazing");
-	//positiveWordList.binarySearch("amazing");
+	Sorting::radixSort(positiveWordList);
+	Sorting::radixSort(negativeWordList);
+	Sorting::radixSortAlphabetically(positiveWordList);
+	Sorting::radixSortAlphabetically(negativeWordList);
 
-	////middle range of word list
-	//positiveWordList.linearSearch("great");
-	//positiveWordList.binarySearch("great");
+	Sorting::selectionSort(positiveWordList);
+	Sorting::selectionSort(negativeWordList);
+	Sorting::selectionSortAlphabetically(positiveWordList);
+	Sorting::selectionSortAlphabetically(negativeWordList);
 
-	////end range of word list
-	//positiveWordList.linearSearch("wonderful");
-	//positiveWordList.binarySearch("wonderful");
+	Sorting::bubbleSort(positiveWordList);
+	Sorting::bubbleSort(negativeWordList);
+	Sorting::bubbleSortAlphabetically(positiveWordList);
+	Sorting::bubbleSortAlphabetically(negativeWordList);
 
-	////searching for negative words
-	////start range of the word list
-	//negativeWordList.linearSearch("absurd");
-	//negativeWordList.binarySearch("absurd");
+	Sorting::mergeSort(positiveWordList);
+	Sorting::mergeSort(negativeWordList);
+	Sorting::mergeSortAlphabetically(positiveWordList);
+	Sorting::mergeSortAlphabetically(negativeWordList);
 
-	////middle range of word list
-	//negativeWordList.linearSearch("intimidate");
-	//negativeWordList.binarySearch("intimidate");
-
-	////end range of word list
-	//negativeWordList.linearSearch("worse");
-	//negativeWordList.binarySearch("worse");
-
-
+	Sorting::radixSort(positiveWordList);
+	Sorting::radixSort(negativeWordList);
+	cout << "Positive Word List: " << endl << string(70, '-') << endl;
 	positiveWordList.printWordsAndFrequency();
+	cout << string(70, '-') << endl;
+	cout << "Negative Word List: " << endl << string(70, '-') << endl;
 	negativeWordList.printWordsAndFrequency();
+
+	reviewsList.comparison(reviewsList.selectReview(500));
+	reviewsList.sentimentAnalysis(reviewsList.selectReview(500));
+	reviewsList.summary(positiveWordList, negativeWordList);
+
+	//reviewsList.sentimentSummary();
+	//reviewsList.summary(positiveWordList, negativeWordList);
 	//reviewsList.sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(3));
 
 	//reviewsList.comparison(positiveWordList, negativeWordList, reviewsList.selectReview(8));
-
+	//Sorting::selectionSort(positiveWordList);
 
 	//reviewsList.summary(positiveWordList, negativeWordList);
 	//reviewsList.sentimentSummary();

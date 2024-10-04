@@ -22,10 +22,9 @@ public:
 	ReviewList(); //constructor
 	void addReview(string review, int rating, int goodCount, int badCount, double sentiment, string good, string bad); //add review into the linked list
 	void readCSV(string path, WordList& good, WordList& bad); //read CSV file
-	string trim(string str); //trims any special characters
 	double calculateSentiment(int goodCount, int badCount); //calculate the sentiment score
-	void sentimentAnalysis(WordList& good, WordList& bad, ReviewNode* reviews); //sentiment analysis on specific review
-	void comparison(WordList& good, WordList& bad, ReviewNode* review); //compares sentiment and rating of specific review
+	void sentimentAnalysis(ReviewNode* reviews); //sentiment analysis on specific review
+	void comparison(ReviewNode* review); //compares sentiment and rating of specific review
 
 
 	//ADDITIONAL FUNCTIONS

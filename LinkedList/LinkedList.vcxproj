@@ -127,11 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sorting.hpp" />
     <ClInclude Include="WordLL.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ReviewLL.cpp" />
+    <ClCompile Include="Sorting.cpp" />
     <ClCompile Include="WordLL.cpp" />
   </ItemGroup>
   <ItemGroup>
