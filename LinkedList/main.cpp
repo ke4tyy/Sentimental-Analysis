@@ -1,6 +1,6 @@
 #include "ReviewLL.hpp"
 #include "Sorting.hpp"
-
+#include "Analysis.hpp"
 #include <iostream>
 
 using namespace std;
@@ -14,7 +14,7 @@ int main() {
 	positiveWordList.readWord("positive-words.txt");
 	cout << endl << "adding negative words";
 	negativeWordList.readWord("negative-words.txt");
-	reviewsList.readCSV("tripadvisor_hotel_reviews.CSV", positiveWordList, negativeWordList);
+	reviewsList.readCSV("testing.CSV", positiveWordList, negativeWordList);
 
 
 	Sorting::radixSort(positiveWordList);
@@ -47,8 +47,9 @@ int main() {
 
 	reviewsList.comparison(reviewsList.selectReview(500));
 	reviewsList.sentimentAnalysis(reviewsList.selectReview(500));
-	reviewsList.summary(positiveWordList, negativeWordList);
-
+	
+	Analysis::summary(reviewsList, positiveWordList, negativeWordList);
+	Analysis::sentimentSummary(reviewsList);
 	//reviewsList.sentimentSummary();
 	//reviewsList.summary(positiveWordList, negativeWordList);
 	//reviewsList.sentimentAnalysis(positiveWordList, negativeWordList, reviewsList.selectReview(3));
