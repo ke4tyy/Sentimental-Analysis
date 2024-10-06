@@ -19,40 +19,41 @@ WordNode::WordNode() {
 	next = nullptr;
 }
 
-
 //word list
 WordList::WordList() {
-	head = nullptr;
+	head = tail = nullptr;
 }
 
-void WordList::addWordFromFront(string word) {
+void WordList::addWord(string word, insertMethod method) {
 	WordNode* newNode = new WordNode(word);
+
 	if (head == nullptr) {
-		head = newNode;
+		head = tail = newNode;
+		return;
 	}
-	else {
+
+	switch (method) {
+	case insertMethod::fromFront:
 		newNode->next = head;
 		head = newNode;
-	}
+		break;
 
-}
-
-void WordList::addWordFromEnd(string word) {
-	WordNode* newNode = new WordNode(word);
-	//auto start = high_resolution_clock::now();
-	if (head == nullptr) {
-		head = newNode;
-	}
-	else {
-		WordNode* temp = head;
-		while (temp->next != nullptr) {
-			temp = temp->next;
+	case insertMethod::fromEnd:
+		{
+			WordNode* temp = head;
+			while (temp->next != nullptr) {
+				temp = temp->next;
+			}
+			temp->next = newNode;
+			tail = newNode;
 		}
-		temp->next = newNode;
+		break;
+
+	case insertMethod::fromEndUsingTail:
+		tail->next = newNode;
+		tail = newNode;
+		break;
 	}
-	//auto end = high_resolution_clock::now();
-	//auto elapsed = duration_cast<nanoseconds>(end - start).count();
-	//cout << endl << "Time elapsed : " << elapsed << " nanoseconds. " << endl;
 }
 
 void WordList::addFrequency(string word) {
@@ -79,13 +80,13 @@ bool WordList::searchWord(string word) {
 	return false;
 }
 
-void WordList::readWord(string path) {
-	auto start = high_resolution_clock::now();
+void WordList::readWord(string path, insertMethod method) {
 	ifstream file(path);
+	auto start = high_resolution_clock::now();
 	if (file.is_open()) {
 		string word;
 		while (getline(file, word)) {
-			this->addWordFromFront(word);
+			addWord(word, method);
 		}
 	}
 	else {
@@ -93,7 +94,19 @@ void WordList::readWord(string path) {
 	}
 	auto end = high_resolution_clock::now();
 	auto elapsed = duration_cast<microseconds>(end - start).count();
-	cout << endl << "Time elapsed : " << elapsed << " microseconds. " << endl;
+
+	switch (method) {
+	case insertMethod::fromFront:
+		cout << "Method used : Insert from Front" << endl;
+		break;
+	case insertMethod::fromEnd:
+		cout << "Method used : Insert from End" << endl;
+		break;
+	case insertMethod::fromEndUsingTail:
+		cout << "Method used : Insert from End using Tail" << endl;
+		break;
+	}
+	cout << "Time elapsed : " << elapsed << " microseconds. " << endl << endl;
 }
 
 WordNode* WordList::findMiddle(WordNode* node) {
@@ -198,7 +211,7 @@ WordList::~WordList() {
 	}
 }
 
-
+//trimming function (global variable): so that both ReviewLL and WordLL can use
 namespace trimming {
 	string trimming::trim(string str) {
 		size_t start = 0;

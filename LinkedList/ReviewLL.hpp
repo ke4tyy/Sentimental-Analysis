@@ -26,12 +26,11 @@ public:
 	void sentimentAnalysis(ReviewNode* reviews); //sentiment analysis on specific review
 	void comparison(ReviewNode* review); //compares sentiment and rating of specific review
 
-
 	//ADDITIONAL FUNCTIONS
 	void print(int amount); //prints the number of reviews out based on the amount given
 	int countTotal(); //counts the total of elements in the list
 	ReviewNode* selectReview(int index); //select specific review
-	void searchRelevant(string searchWord);
+	void searchRelevant(string searchWord); //search for relevant reviews
 	~ReviewList();
 };
 
