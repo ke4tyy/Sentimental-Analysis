@@ -13,6 +13,11 @@ WordNode::WordNode(string word) {
 	next = nullptr;
 }
 
+WordNode::WordNode(string word, int frequency) {
+	this->word = word;
+	this->frequency = frequency;
+	next = nullptr;
+}
 WordNode::WordNode() {
 	word = "";
 	frequency = 0;
@@ -72,7 +77,6 @@ bool WordList::searchWord(string word) {
 	WordNode* checkNode = head;
 	while (checkNode != nullptr) {
 		if (checkNode->word == word) {
-			cout << "word found! \n word: " << word << endl << "frequency: " << checkNode->frequency << endl;
 			return true;
 		}
 		checkNode = checkNode->next;
@@ -199,6 +203,15 @@ void WordList::printWordsAndFrequency() {
 				currentNode = currentNode->next;
 			}
 		}
+	}
+}
+
+void WordList::printReversely(WordNode* wordHead, int& initial, int limit) {
+	if (wordHead == nullptr || initial == limit) return;
+	printReversely(wordHead->next, initial, limit);
+	if (wordHead->frequency != 0 && initial < limit) {
+		cout << left << setw(15) << wordHead->word << " = " << wordHead->frequency << " times" << endl;
+		initial++;
 	}
 }
 

@@ -128,12 +128,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Analysis.hpp" />
+    <ClInclude Include="Interface.hpp" />
     <ClInclude Include="Sorting.hpp" />
     <ClInclude Include="WordLL.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Analysis.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Interface.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="ReviewLL.cpp" />
     <ClCompile Include="Sorting.cpp" />
     <ClCompile Include="WordLL.cpp" />

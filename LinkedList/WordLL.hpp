@@ -20,6 +20,7 @@ struct WordNode {
 	WordNode* next = nullptr;
 
 	WordNode(string word);
+	WordNode(string word, int frequency);
 	WordNode();
 };
 
@@ -35,6 +36,8 @@ public:
 	void readWord(string path, insertMethod method); //reads the .txt file
 	WordNode* findMiddle(WordNode* node); //finds the middle of the list
 	void printWordsAndFrequency(); //prints words and their frequency
+	void printReversely(WordNode* wordHead, int& initial, int limit); //prints words and their frequency in reversed order
+	//to be deleted
 	void binarySearch(string searchWord); //binary search on the word list
 	void linearSearch(string searchWord); //linear search on the word list
 
@@ -44,6 +47,7 @@ public:
 namespace trimming {
 	string trim(string word);
 }
+
 
 
 #endif
