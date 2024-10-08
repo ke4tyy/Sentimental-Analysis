@@ -135,9 +135,9 @@
   <ItemGroup>
     <ClCompile Include="Analysis.cpp" />
     <ClCompile Include="Interface.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="ReviewLL.cpp" />
     <ClCompile Include="Sorting.cpp" />
-    <ClCompile Include="test.cpp" />
     <ClCompile Include="WordLL.cpp" />
   </ItemGroup>
   <ItemGroup>
