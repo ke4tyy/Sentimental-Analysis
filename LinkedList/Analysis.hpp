@@ -15,7 +15,9 @@ namespace Analysis {
 	void summary(ReviewList& list, WordList& good, WordList& bad); //summary
 
 	//comparison analysis
-	ReviewList* copyList(ReviewList& list);
+	WordList* copyList(WordList& list);
+	void compareSort(WordList& list, bool alphabetically);
+	void compareInsertion(WordList& list);
 }
 
 

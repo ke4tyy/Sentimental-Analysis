@@ -64,7 +64,7 @@ ReviewNode* ReviewList::selectReview(int index) {
 	return nullptr;
 }
 
-void ReviewList::readCSV(string path, WordList& good, WordList& bad) {
+void ReviewList::readCSV(const string& path, WordList& good, WordList& bad) {
 	ifstream file(path); //open file
 	if (!file.is_open()) {
 		cerr << "Error reading file : " << path << endl;

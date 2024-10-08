@@ -64,6 +64,7 @@ void Interface::selectSample(ReviewList& reviewsList, WordList& positiveWordList
 }
 
 void Interface::menu(ReviewList& reviewsList, WordList& positiveWordList, WordList& negativeWordList) {
+	system("cls");
 	do {
 		option = -1;
 		cout << "Please select an option: " << endl
@@ -263,8 +264,8 @@ void Interface::wordMenu(ReviewList& reviewsList, WordList& positiveWordList, Wo
 				do {
 					system("cls");
 					cout << "Please select an option: " << endl
-						<< "1. Print good words" << endl
-						<< "2. Print bad words" << endl
+						<< "1. Print words sorted by frequency" << endl
+						<< "2. Print words sorted A - Z" << endl
 						<< "0. Back to menu" << endl;
 
 					cin >> choice;
@@ -273,12 +274,23 @@ void Interface::wordMenu(ReviewList& reviewsList, WordList& positiveWordList, Wo
 						case 0:
 							wordMenu(reviewsList, positiveWordList, negativeWordList);
 							break;
+
 						case 1:
 							Sorting::radixSort(positiveWordList);
+							cout << "\n\nPositive words, printed in ascending order" << endl << string(70, '-') << endl;
 							positiveWordList.printWordsAndFrequency();
-							break;
-						case 2:
+
 							Sorting::radixSort(negativeWordList);
+							cout << "\n\nNegative words, printed in descending order" << endl << string(70, '-') << endl;
+							negativeWordList.printWordsAndFrequency();
+							break;
+
+						case 2: 
+							Sorting::radixSortAlphabetically(positiveWordList);
+							cout << "\n\nPositive words, printed in ascending order" << endl << string(70, '-') << endl;
+							positiveWordList.printWordsAndFrequency();
+							Sorting::radixSortAlphabetically(negativeWordList);
+							cout << "\n\nNegative words, printed in descending order" << endl << string(70, '-') << endl;
 							negativeWordList.printWordsAndFrequency();
 							break;
 						}
@@ -342,13 +354,133 @@ void Interface::comparisonMenu(ReviewList& reviewsList, WordList& positiveWordLi
 	system("cls");
 	option = -1;
 	do {
-		cout << "Please select an opption: " << endl
+		cout << "Please select an option: " << endl
 			<< string(70, '-') << endl << "Comparison Functions Menu" << endl << string(70, '-') << endl
 			<< "1. Search Comparison" << endl
 			<< "2. Sort Comparison" << endl
+			<< "3. Insert Comparison" << endl
 			<< "0. Back to Menu" << endl;
 		cout << string(70, '-') << endl << "Your option: ";
 		cin >> option;
 
-	} while (option < 0 || option > 2);
+		if (checkIsInt()) {
+			int choice = -1;
+			switch (option) {
+			case 0:
+				menu(reviewsList, positiveWordList, negativeWordList);
+				break;
+			case 1:
+				choice = -1;
+				system("cls");
+				do {
+					system("cls");
+					cout << "Please select an searchihg method: " << endl
+						<< "1. Linear Search for Positive Word " << endl
+						<< "2. Linear Search for Negative Word " << endl
+						<< "3. Binary Search for Positive Word " << endl
+						<< "4. Binary Search for Negative Word " << endl
+						<< "0. Back to word menu" << endl
+						<< "Your option: ";
+					cin >> choice;
+					if (checkIsInt()) {
+						string word;
+						system("cls");
+						switch (choice) {
+						case 0:
+							comparisonMenu(reviewsList, positiveWordList, negativeWordList);
+								break;
+						case 1:
+							cout << "Enter keyword: ";
+							cin >> word;
+							Sorting::radixSortAlphabetically(positiveWordList);
+							positiveWordList.linearSearch(word);
+							system("pause");
+							comparisonMenu(reviewsList, positiveWordList, negativeWordList);
+							break;
+						case 2:
+							cout << "Enter keyword: ";
+							cin >> word;
+							Sorting::radixSortAlphabetically(negativeWordList);
+							negativeWordList.linearSearch(word);
+							system("pause");
+							comparisonMenu(reviewsList, positiveWordList, negativeWordList);
+							break;
+						case 3:
+							cout << "Enter keyword: ";
+							cin >> word;
+							Sorting::radixSortAlphabetically(positiveWordList);
+							positiveWordList.binarySearch(word);
+							system("pause");
+							comparisonMenu(reviewsList, positiveWordList, negativeWordList);
+							break;
+						case 4:
+							cout << "Enter keyword: ";
+							cin >> word;
+							Sorting::radixSortAlphabetically(negativeWordList);
+							negativeWordList.binarySearch(word);
+							system("pause");
+							comparisonMenu(reviewsList, positiveWordList, negativeWordList);
+							break;
+						default:
+							system("cls");
+							cout << "Invalid option, please select again" << endl;
+							break;
+						}
+					}
+				} while (choice < 0 || choice > 4);
+				system("pause");
+				comparisonMenu(reviewsList, positiveWordList, negativeWordList);
+				break;
+
+			case 2:
+				choice = -1;
+				system("cls");
+				do {
+					cout << "Please select comparison type: " << endl
+						<< "1. Sorting by Frequency" << endl
+						<< "2. Sorting by Alphabets" << endl
+						<< "0. Back to menu" << endl;
+					cout << "Your option: ";
+					cin >> choice;
+
+					if (checkIsInt()) {
+						switch (choice) {
+						case 0:
+							comparisonMenu(reviewsList, positiveWordList, negativeWordList);
+							break;
+						case 1:
+							cout << "\n\n\n\n\nSorting comparison in POSITIVE word list" << endl << string(70, '-') << endl;
+							Analysis::compareSort(positiveWordList, false);
+							cout << "\n\n\n\n\nSorting comparison in NEGATIVE word list" << endl << string(70, '-') << endl;
+							Analysis::compareSort(negativeWordList, false);
+							system("pause");
+							comparisonMenu(reviewsList, positiveWordList, negativeWordList);
+							break;
+						case 2: 
+							cout << "\n\n\n\n\nSorting comparison in POSITIVE word list" << endl << string(70, '-') << endl;
+							Analysis::compareSort(positiveWordList, true);
+							cout << "\n\n\n\n\nSorting comparison in NEGATIVE word list" << endl << string(70, '-') << endl;
+							Analysis::compareSort(negativeWordList, true);
+							system("pause");
+							comparisonMenu(reviewsList, positiveWordList, negativeWordList);
+							break;
+						}
+
+					}
+				} while (choice < 0 || choice > 2);
+
+			case 3: 
+				cout << "\n\n\n\n\nInsertion comparison in POSITIVE word list" << endl << string(70, '-') << endl;
+				Analysis::compareInsertion(positiveWordList);
+
+				cout << "\n\n\n\n\nInsertion comparison in NEGATIVE word list" << endl << string(70, '-') << endl;
+				Analysis::compareInsertion(negativeWordList);
+				system("pause");
+				comparisonMenu(reviewsList, positiveWordList, negativeWordList);
+				break;
+			}
+		}
+
+
+	} while (option < 0 || option > 3);
 }

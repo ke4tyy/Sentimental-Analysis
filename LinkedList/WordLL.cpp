@@ -8,11 +8,6 @@
 using namespace std;
 using namespace std::chrono;
 
-WordNode::WordNode(string word) {
-	this->word = word;
-	next = nullptr;
-}
-
 WordNode::WordNode(string word, int frequency) {
 	this->word = word;
 	this->frequency = frequency;
@@ -29,8 +24,8 @@ WordList::WordList() {
 	head = tail = nullptr;
 }
 
-void WordList::addWord(string word, insertMethod method) {
-	WordNode* newNode = new WordNode(word);
+void WordList::addWord(string word, int frequency, insertMethod method) {
+	WordNode* newNode = new WordNode(word, frequency);
 
 	if (head == nullptr) {
 		head = tail = newNode;
@@ -84,13 +79,13 @@ bool WordList::searchWord(string word) {
 	return false;
 }
 
-void WordList::readWord(string path, insertMethod method) {
+void WordList::readWord(const string& path, insertMethod method) {
 	ifstream file(path);
 	auto start = high_resolution_clock::now();
 	if (file.is_open()) {
 		string word;
-		while (getline(file, word)) {
-			addWord(word, method);
+		while (file >> word) {
+			addWord(word, 0, method);
 		}
 	}
 	else {
@@ -203,15 +198,6 @@ void WordList::printWordsAndFrequency() {
 				currentNode = currentNode->next;
 			}
 		}
-	}
-}
-
-void WordList::printReversely(WordNode* wordHead, int& initial, int limit) {
-	if (wordHead == nullptr || initial == limit) return;
-	printReversely(wordHead->next, initial, limit);
-	if (wordHead->frequency != 0 && initial < limit) {
-		cout << left << setw(15) << wordHead->word << " = " << wordHead->frequency << " times" << endl;
-		initial++;
 	}
 }
 

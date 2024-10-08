@@ -19,7 +19,6 @@ struct WordNode {
 	int frequency = 0;
 	WordNode* next = nullptr;
 
-	WordNode(string word);
 	WordNode(string word, int frequency);
 	WordNode();
 };
@@ -30,14 +29,12 @@ public:
 	WordNode* tail;
 	WordList(); //constructor
 
-	void addWord(string word, insertMethod method); //using the insertMethodto compare the time
+	void addWord(string word, int frequency, insertMethod method); //using the insertMethodto compare the time
 	void addFrequency(string word); //adds frequency into the word's list when detected
 	bool searchWord(string word); //searches the word, if it exists, returns true
-	void readWord(string path, insertMethod method); //reads the .txt file
+	void readWord(const string& path, insertMethod method); //reads the .txt file
 	WordNode* findMiddle(WordNode* node); //finds the middle of the list
 	void printWordsAndFrequency(); //prints words and their frequency
-	void printReversely(WordNode* wordHead, int& initial, int limit); //prints words and their frequency in reversed order
-	//to be deleted
 	void binarySearch(string searchWord); //binary search on the word list
 	void linearSearch(string searchWord); //linear search on the word list
 

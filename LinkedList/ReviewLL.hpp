@@ -20,7 +20,7 @@ public:
 	ReviewNode* tail;
 	ReviewList(); //constructor
 	void addReview(string review, int rating, int goodCount, int badCount, double sentiment, string good, string bad); //add review into the linked list
-	void readCSV(string path, WordList& good, WordList& bad); //read CSV file
+	void readCSV(const string& path, WordList& good, WordList& bad); //read CSV file
 	double calculateSentiment(int goodCount, int badCount); //calculate the sentiment score
 	
 	//ADDITIONAL FUNCTIONS
