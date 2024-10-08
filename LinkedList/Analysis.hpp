@@ -13,6 +13,9 @@ namespace Analysis {
 	void comparison(ReviewNode* review); //compares sentiment and rating of specific review
 	void sentimentSummary(ReviewList& list); //summary based on sentiment score
 	void summary(ReviewList& list, WordList& good, WordList& bad); //summary
+
+	//comparison analysis
+	ReviewList* copyList(ReviewList& list);
 }
 
 

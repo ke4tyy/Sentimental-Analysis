@@ -71,6 +71,7 @@ void Interface::menu(ReviewList& reviewsList, WordList& positiveWordList, WordLi
 			<< "1. Analysis Functions" << endl
 			<< "2. Review Functions" << endl
 			<< "3. Word Functions" << endl
+			<< "4. Comparison Functions" << endl
 			<< "0. Exit" << endl;
 
 		cout << string(70, '-') << endl << "Your option: ";
@@ -90,6 +91,8 @@ void Interface::menu(ReviewList& reviewsList, WordList& positiveWordList, WordLi
 			case 3:
 				wordMenu(reviewsList, positiveWordList, negativeWordList);
 				break;
+			case 4: 
+				comparisonMenu(reviewsList, positiveWordList, negativeWordList);
 			default:
 				system("cls");
 				cout << "Invalid option, please select again" << endl;
@@ -97,7 +100,7 @@ void Interface::menu(ReviewList& reviewsList, WordList& positiveWordList, WordLi
 			}
 		}
 
-	} while (option < 0 || option > 3);
+	} while (option < 0 || option > 4);
 }
 
 void Interface::analysisMenu(ReviewList& reviewsList, WordList& positiveWordList, WordList& negativeWordList) {
@@ -333,4 +336,19 @@ void Interface::wordMenu(ReviewList& reviewsList, WordList& positiveWordList, Wo
 			}
 		}
 	} while (option < 0 || option > 3);
+}
+
+void Interface::comparisonMenu(ReviewList& reviewsList, WordList& positiveWordList, WordList& negativeWordList) {
+	system("cls");
+	option = -1;
+	do {
+		cout << "Please select an opption: " << endl
+			<< string(70, '-') << endl << "Comparison Functions Menu" << endl << string(70, '-') << endl
+			<< "1. Search Comparison" << endl
+			<< "2. Sort Comparison" << endl
+			<< "0. Back to Menu" << endl;
+		cout << string(70, '-') << endl << "Your option: ";
+		cin >> option;
+
+	} while (option < 0 || option > 2);
 }
